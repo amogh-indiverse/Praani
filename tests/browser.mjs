@@ -22,7 +22,7 @@ try{
  const page=await browser.newPage({viewport:{width:390,height:844}});
  const errors=[];page.on("pageerror",e=>errors.push(e.message));
  await page.route("**/api/**",r=>r.fulfill({status:200,contentType:"application/json",body:JSON.stringify({cards:[],hasMore:false,total:samples.length})}));
- let html=extract("HTML").replace("__PRAANI_SPECIES_JSON__",JSON.stringify(samples)).replace(/<script defer src="\\/app\\.js[^"]*"><\\/script>/,"").replace(/<link rel="stylesheet" href="\\/style\\.css[^"]*">/,"");
+ let html=extract("HTML").replace("__PRAANI_SPECIES_JSON__",JSON.stringify(samples)).replace(/<script defer src="\/app\.js[^"]*"><\/script>/,"").replace(/<link rel="stylesheet" href="\/style\.css[^"]*">/,"");
  await page.setContent(html,{waitUntil:"domcontentloaded"});
  await page.addStyleTag({content:extract("CSS")});
  await page.addScriptTag({content:extract("CLIENT")});
