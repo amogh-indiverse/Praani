@@ -28,3 +28,24 @@ test("PostgreSQL schema and contribution API remain present", () => {
   assert.ok(source.includes("CREATE TABLE IF NOT EXISTS species_catalog"));
   assert.ok(source.includes('path==="/api/contribute"'));
 });
+
+test("client JavaScript compiles without syntax errors", async () => {
+  const { Script } = await import("node:vm");
+  const match = source.match(/const CLIENT=String\\.raw`([\\s\\S]*?)`;/);
+  assert.ok(match, "Client script must be present");
+  assert.doesNotThrow(() => new Script(match[1]));
+});
+test("native species autocomplete fallback is wired", () => {
+  assert.ok(source.includes('list="species-options"'));
+  assert.ok(source.includes('id="species-options">__PRAANI_OPTIONS__'));
+  assert.ok(source.includes('search.onchange=()=>'));
+  assert.ok(source.includes('search.oninput=showResults'));
+  assert.ok(source.includes('.replace("__PRAANI_OPTIONS__",options)'));
+});
+test("native autocomplete options escape user-visible HTML", async () => {
+  const { runInNewContext } = await import("node:vm");
+  const match = source.match(/const escapeOption=x=>([^;]+);/);
+  assert.ok(match, "Escaping function must exist");
+  const escape = runInNewContext("(" + "x=>" + match[1] + ")");
+  assert.equal(escape('A&B<"x">'), 'A&amp;B&lt;&quot;x&quot;&gt;');
+});
