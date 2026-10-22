@@ -44,6 +44,7 @@ try{
  assert.ok(escaped.includes("Snow Leopard"),"Escaped Unicode not decoded");
  await page.screenshot({path:"test-results/mobile.png",fullPage:true});
  await page.close();
+ if(process.env.PRAANI_LIVE_TEST==="1"){
  const live=await browser.newPage({viewport:{width:390,height:844}});
  const liveErrors=[];live.on("pageerror",e=>liveErrors.push(e.message));
  const response=await live.goto("https://praani-web.onrender.com/?e2e="+Date.now(),{waitUntil:"domcontentloaded",timeout:120000});
@@ -62,5 +63,6 @@ try{
  assert.ok(liveSuggestions.some(s=>/tiger/i.test(s)),"Live autocomplete missing tiger");
  assert.ok(liveSuggestions.every(s=>!s.includes(String.fromCharCode(92)+"u")),"Live autocomplete contains Unicode escapes");
  assert.deepEqual(liveErrors,[],"Live JavaScript errors");
+ }
  console.log("BROWSER E2E PASS");
 }finally{await browser.close()}
