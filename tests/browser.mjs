@@ -26,11 +26,15 @@ mkdirSync("test-results",{recursive:true});
 try{
  const page=await browser.newPage({viewport:{width:390,height:844}});
  const errors=[];page.on("pageerror",e=>errors.push(e.message));
- await page.route("**/api/**",r=>r.fulfill({status:200,contentType:"application/json",body:JSON.stringify(r.request().method()==="POST"?{ok:true}:{cards:[],hasMore:false,total:samples.length})}));
- let html=decodeStaticUnicode(extract("HTML")).replace("__PRAANI_SPECIES_JSON__",JSON.stringify(samples)).replace(/<script defer src="\/app\.js[^"]*"><\/script>/,"").replace(/<link rel="stylesheet" href="\/style\.css[^"]*">/,"");
- await page.setContent(html,{waitUntil:"domcontentloaded"});
- await page.addStyleTag({content:decodeStaticUnicode(extract("CSS"))});
- await page.addScriptTag({content:decodeStaticUnicode(extract("CLIENT"))});
+ const html=decodeStaticUnicode(extract("HTML")).replace("__PRAANI_SPECIES_JSON__",JSON.stringify(samples));
+ await page.route("https://praani.test/**",route=>{
+   const url=new URL(route.request().url());
+   if(url.pathname==="/style.css")return route.fulfill({status:200,contentType:"text/css",body:decodeStaticUnicode(extract("CSS"))});
+   if(url.pathname==="/app.js")return route.fulfill({status:200,contentType:"application/javascript",body:decodeStaticUnicode(extract("CLIENT"))});
+   if(url.pathname.startsWith("/api/"))return route.fulfill({status:200,contentType:"application/json",body:JSON.stringify(route.request().method()==="POST"?{ok:true}:{cards:[],hasMore:false,total:samples.length})});
+   return route.fulfill({status:200,contentType:"text/html",body:html});
+ });
+ await page.goto("https://praani.test/",{waitUntil:"domcontentloaded"});
  assert.deepEqual(errors,[],"Browser JS errors: "+errors.join("; "));
  assert.ok(!await page.locator("h1").innerText().then(x=>x.includes(String.fromCharCode(92)+"u")),"Title must not show Unicode escape sequences");
  assert.equal(await page.locator("#details").isVisible(),true,"Contribution form must be visible");
