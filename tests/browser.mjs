@@ -15,7 +15,7 @@ const decoderStart=source.indexOf("const decodeStaticUnicode=");
 const decoderEnd=source.indexOf(";\nBun.serve",decoderStart);
 assert.ok(decoderStart>=0&&decoderEnd>decoderStart,"Template decoder missing");
 const decodeStaticUnicode=runInNewContext(source.slice(decoderStart,decoderEnd)+";decodeStaticUnicode");
-const browser=await chromium.launch({headless:true});
+const browser=await chromium.launch({headless:true,...(process.env.PRAANI_BROWSER_CHANNEL?{channel:process.env.PRAANI_BROWSER_CHANNEL}:{})});
 const samples=[
  {id:"tiger",type:"Mammal",common:"Bengal Tiger",scientific:"Panthera tigris tigris",family:"Felidae",alternativeNames:["Royal Bengal Tiger"]},
  {id:"shark",type:"Fish",common:"Tiger Shark",scientific:"Galeocerdo cuvier",family:"Carcharhinidae",alternativeNames:[]},
