@@ -20,17 +20,20 @@ const samples=[
  {id:"tiger",type:"Mammal",common:"Bengal Tiger",scientific:"Panthera tigris tigris",family:"Felidae",alternativeNames:["Royal Bengal Tiger"]},
  {id:"shark",type:"Fish",common:"Tiger Shark",scientific:"Galeocerdo cuvier",family:"Carcharhinidae",alternativeNames:[]},
  {id:"bird",type:"Bird",common:"Indian Peafowl",scientific:"Pavo cristatus",family:"Phasianidae",alternativeNames:["Peacock"]},
+ {id:"snake",type:"Snake",common:"King Cobra",scientific:"Ophiophagus kaalinga",family:"Elapidae",alternativeNames:[]},
  {id:"unicode",type:"Mammal",common:"Snow "+String.fromCharCode(92)+"u004ceopard",scientific:"Panthera uncia",family:"Felidae",alternativeNames:[]}
 ];
 mkdirSync("test-results",{recursive:true});
 try{
  const page=await browser.newPage({viewport:{width:390,height:844}});
  const errors=[];page.on("pageerror",e=>errors.push(e.message));
+ const contributions=[];
  const html=decodeStaticUnicode(extract("HTML")).replace("__PRAANI_SPECIES_JSON__",JSON.stringify(samples));
  await page.route("https://praani.test/**",route=>{
    const url=new URL(route.request().url());
    if(url.pathname==="/style.css")return route.fulfill({status:200,contentType:"text/css",body:decodeStaticUnicode(extract("CSS"))});
    if(url.pathname==="/app.js")return route.fulfill({status:200,contentType:"application/javascript",body:decodeStaticUnicode(extract("CLIENT"))});
+   if(url.pathname==="/api/contribute")contributions.push(route.request().postDataJSON());
    if(url.pathname.startsWith("/api/"))return route.fulfill({status:200,contentType:"application/json",body:JSON.stringify(route.request().method()==="POST"?{ok:true}:{cards:[],hasMore:false,total:samples.length})});
    return route.fulfill({status:200,contentType:"text/html",body:html});
  });
@@ -60,6 +63,25 @@ try{
  console.log("FORM DIAGNOSTIC",await page.locator("#form-message").innerText(),await page.locator("#species-search").inputValue(),await page.locator("#language").inputValue());
  await page.locator("#success").waitFor({state:"visible",timeout:5000});
  assert.ok((await page.locator("#success-summary").innerText()).includes("Him Tendua"),"Success confirmation missing submitted name");
+ for(const [species,type] of [["Indian Peafowl","Bird"],["Bengal Tiger","Mammal"],["King Cobra","Snake"]]){
+  await page.locator("#success-another").click();
+  await page.locator("#species-search").fill(species);
+  await page.locator("#results .result").filter({hasText:species}).first().click();
+  assert.equal(await page.locator("#name-suggestion").isVisible(),true,type+" must allow a new common name");
+  await page.locator("#language").selectOption("Kannada");
+  await page.locator("#suggest").fill("Forest guardian");
+  await page.locator("#why").fill("Inspired by its forest habitat");
+  assert.equal(await page.locator("#local-name").inputValue(),"");
+  await page.locator("#submit").click();
+  await page.locator("#success").waitFor({state:"visible",timeout:5000});
+  const saved=contributions.at(-1);
+  assert.equal(saved.type,type);
+  assert.equal(saved.localName,"");
+  assert.equal(saved.commonName,"Forest guardian");
+  const confirmation=await page.locator("#success-summary").innerText();
+  assert.ok(confirmation.includes("Forest guardian")&&confirmation.includes(species),"Proposal confirmation must name the proposal and species");
+ }
+ console.log("ALL SPECIES SUGGESTIONS PASS");
  const previousTheme=await page.locator("html").getAttribute("data-theme");
  await page.locator("#theme").click();
  assert.notEqual(await page.locator("html").getAttribute("data-theme"),previousTheme,"Theme toggle failed");
@@ -102,3 +124,4 @@ try{
  }
  console.log("BROWSER E2E PASS");
 }finally{await browser.close()}
+
