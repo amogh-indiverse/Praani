@@ -76,3 +76,11 @@ test("autocomplete finds common, scientific and alternative names from first cha
   assert.equal(findSpecies("peacock",data)[0].common,"Indian Peafowl");
   assert.equal(findSpecies("nonesuch",data).length,0);
 });
+
+test("Live Render title and health diagnostic", async () => {
+  const response=await fetch("https://praani-web.onrender.com/");
+  const html=await response.text();
+  const title=html.match(/<title>([^<]*)<\\/title>/)?.[1];
+  console.log("LIVE_TITLE",title,"HTML_BYTES",html.length);
+  assert.ok(response.ok);
+});
