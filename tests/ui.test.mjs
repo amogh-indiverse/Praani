@@ -80,7 +80,7 @@ test("autocomplete finds common, scientific and alternative names from first cha
 test("Live Render title and health diagnostic", async () => {
   const response=await fetch("https://praani-web.onrender.com/");
   const html=await response.text();
-  const title=html.match(/<title>([^<]*)<\\/title>/)?.[1];
+  const title=html.split("<title>")[1]?.split("</title>")[0];
   console.log("LIVE_TITLE",title,"HTML_BYTES",html.length);
   assert.ok(response.ok);
 });
