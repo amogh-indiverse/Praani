@@ -10,6 +10,11 @@ function extract(label){
  assert.ok(to>from,label+" terminator missing");
  return source.slice(from,to);
 }
+const { runInNewContext }=await import("node:vm");
+const decoderStart=source.indexOf("const decodeStaticUnicode=");
+const decoderEnd=source.indexOf(";\nBun.serve",decoderStart);
+assert.ok(decoderStart>=0&&decoderEnd>decoderStart,"Template decoder missing");
+const decodeStaticUnicode=runInNewContext(source.slice(decoderStart,decoderEnd)+";decodeStaticUnicode");
 const browser=await chromium.launch({headless:true});
 const samples=[
  {id:"tiger",type:"Mammal",common:"Bengal Tiger",scientific:"Panthera tigris tigris",family:"Felidae",alternativeNames:["Royal Bengal Tiger"]},
@@ -22,11 +27,12 @@ try{
  const page=await browser.newPage({viewport:{width:390,height:844}});
  const errors=[];page.on("pageerror",e=>errors.push(e.message));
  await page.route("**/api/**",r=>r.fulfill({status:200,contentType:"application/json",body:JSON.stringify({cards:[],hasMore:false,total:samples.length})}));
- let html=extract("HTML").replace("__PRAANI_SPECIES_JSON__",JSON.stringify(samples)).replace(/<script defer src="\/app\.js[^"]*"><\/script>/,"").replace(/<link rel="stylesheet" href="\/style\.css[^"]*">/,"");
+ let html=decodeStaticUnicode(extract("HTML")).replace("__PRAANI_SPECIES_JSON__",JSON.stringify(samples)).replace(/<script defer src="\/app\.js[^"]*"><\/script>/,"").replace(/<link rel="stylesheet" href="\/style\.css[^"]*">/,"");
  await page.setContent(html,{waitUntil:"domcontentloaded"});
- await page.addStyleTag({content:extract("CSS")});
- await page.addScriptTag({content:extract("CLIENT")});
+ await page.addStyleTag({content:decodeStaticUnicode(extract("CSS"))});
+ await page.addScriptTag({content:decodeStaticUnicode(extract("CLIENT"))});
  assert.deepEqual(errors,[],"Browser JS errors: "+errors.join("; "));
+ assert.ok(!await page.locator("h1").innerText().then(x=>x.includes(String.fromCharCode(92)+"u")),"Title must not show Unicode escape sequences");
  assert.equal(await page.locator("#details").isVisible(),true,"Contribution form must be visible");
  await page.locator("#species-search").fill("tiger");
  await page.waitForTimeout(150);
