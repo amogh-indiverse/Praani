@@ -4,7 +4,7 @@ import { parse as parseCSV } from "csv-parse/sync";
 import { load } from "cheerio";
 import { createHash, createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 const env=Bun.env;
-const RELEASE="praani-20261022-editorial-clean-v13";
+const RELEASE="praani-20261022-catalogue-fix-v14";
 const sql=postgres(env.DATABASE_URL||"",{max:5,connect_timeout:12});
 const langs=["Kannada","Hindi","Tamil","Telugu","Malayalam","Marathi","Bengali","Gujarati","Punjabi","Odia","Assamese","Konkani","Tulu","Kodava","Urdu","Sanskrit","Nepali","Manipuri","Bodo","Santali","Khasi","Mizo","Sindhi","Kashmiri","Dogri","Maithili","Other"];
 const kinds=["Bird","Mammal","Snake"];
@@ -34,7 +34,18 @@ const body=async r=>{if(!r.headers.get("content-type")?.includes("application/js
 const authed=r=>{const t=(r.headers.get("cookie")||"").match(/(?:^|;\s*)praani_admin=(\d{10})\.([0-9a-f]{64})/);if(!t||now()>Number(t[1]))return false;return timingSafeEqual(Buffer.from(t[2]),Buffer.from(hmac(t[1]+"|"+env.ADMIN_EMAIL)))};
 const throttle=async(r,act,max,window)=>{const ip=r.headers.get("x-forwarded-for")?.split(",")[0]||r.headers.get("cf-connecting-ip")||"anonymous";const h=sha(ip+"|"+env.SESSION_SECRET+"|"+act);const z=await sql.unsafe("SELECT COUNT(*)::int AS n FROM rate_events WHERE ip_hash=$1 AND action=$2 AND created_at>$3",[h,act,now()-window]);if(z[0].n>=max)throw new Err("Too many requests, try again later",429);await sql.unsafe("INSERT INTO rate_events(ip_hash,action,created_at) VALUES($1,$2,$3)",[h,act,now()]);if(Math.random()<.02)await sql.unsafe("DELETE FROM rate_events WHERE created_at<$1",[now()-172800])};
 const safeSnakeName=x=>{if(typeof x!=="string")return null;const s=x.trim().replace(/\\s+/g," ");if(!s||s.length>95||s.split(" ").length>12||/English common name not available|Synonym|Distribution|Higher Taxa|References|Etymology|Type locality|Reproduction|\\b(?:Chinese|German|French):|\\bG:|\\bE:|\\\\u[0-9a-fA-F]{4}/i.test(s))return null;return s};
-const getCatalog=async()=>{const rows=await sql.unsafe('SELECT id,species_kind AS type,scientific,common,family,alternative_names AS "alternativeNames",subgroup AS "group" FROM species_catalog ORDER BY species_kind,COALESCE(common,scientific)');return rows.map(s=>s.type!=="Snake"?s:{...s,common:safeSnakeName(s.common),alternativeNames:(s.alternativeNames||[]).map(safeSnakeName).filter(Boolean)})};
+const parseAliases=value=>{
+ let a=value;
+ if(typeof a==="string"){try{a=JSON.parse(a)}catch{return []}}
+ return Array.isArray(a)?a.filter(x=>typeof x==="string"&&x.trim().length>0):[];
+};
+const getCatalog=async()=>{
+ const rows=await sql.unsafe('SELECT id,species_kind AS type,scientific,common,family,alternative_names AS "alternativeNames",subgroup AS "group" FROM species_catalog ORDER BY species_kind,COALESCE(common,scientific)');
+ return rows.map(s=>{
+  const names=parseAliases(s.alternativeNames);
+  return {...s,alternativeNames:s.type==="Snake"?names.map(safeSnakeName).filter(Boolean):names,common:s.type==="Snake"?safeSnakeName(s.common):s.common};
+ });
+};
 const stableId=(kind,sci)=>createHash("sha1").update(kind+"|"+sci.toLowerCase()).digest("hex").slice(0,18);
 const make=(kind,sci,common,family,alternatives=[],group="")=>({id:stableId(kind,sci),type:kind,scientific:sci,common:common||null,family:family||"",alternativeNames:alternatives,group});
 const splitNames=s=>String(s||"").split(/[;|,\n]+/).map(x=>x.trim()).filter(x=>x&&x!=="NA"&&x!=="N/A");
@@ -59,7 +70,7 @@ async function entries(url){const f=url.searchParams.get("filter")||"All",langua
 async function admin(r,url){const path=url.pathname;if(path==="/api/admin/login"){validateOrigin(r);const b=await body(r);await throttle(r,"login",8,900);const value=sha(clean(b.email,200).toLowerCase()+"\n"+String(b.password||"")),expect=sha(String(env.ADMIN_EMAIL||"").toLowerCase()+"\n"+String(env.ADMIN_PASSWORD||""));if(!env.ADMIN_EMAIL||!env.ADMIN_PASSWORD||!env.SESSION_SECRET||!timingSafeEqual(Buffer.from(value),Buffer.from(expect)))throw new Err("Incorrect credentials",401);const exp=String(now()+86400);return response({ok:true},200,{"set-cookie":"praani_admin="+exp+"."+hmac(exp+"|"+env.ADMIN_EMAIL)+"; Max-Age=86400; Path=/; HttpOnly; Secure; SameSite=Strict"})}if(path==="/api/admin/status")return response({signedIn:authed(r)});if(path==="/api/admin/logout"){validateOrigin(r);return response({ok:true},200,{"set-cookie":"praani_admin=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Strict"})}if(!authed(r))throw new Err("Administrator login required",401);if(path==="/api/admin/entries"){const [a,b]=await Promise.all([sql.unsafe("SELECT id,species_id,species_kind,name,language,region FROM local_names ORDER BY created_at DESC LIMIT 300"),sql.unsafe("SELECT id,species_id,species_kind,name,why,language,region FROM common_suggestions ORDER BY created_at DESC LIMIT 300")]);return response({localNames:a,suggestions:b})}if(path==="/api/admin/delete"){validateOrigin(r);const b=await body(r);const id=clean(b.id,40),type=clean(b.kind,20);if(!/^[0-9a-f-]{36}$/.test(id)||!["local","suggestion"].includes(type))throw new Err("Invalid deletion");const table=type==="local"?"local_names":"common_suggestions";const result=await sql.unsafe("DELETE FROM "+table+" WHERE id=$1",[id]);return response({ok:true,deleted:result.count})}throw new Err("Not found",404)}
 const HTML=String.raw`<!doctype html>
 <html lang="en" data-theme="dark"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101014"><meta name="description" content="Praani is a public, community-built register of local wildlife names across India's languages."><meta name="praani-release" content="praani-20261022-editorial-clean-v13"><title>Praani — Every creature. Every name.</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101014"><meta name="description" content="Praani is a public, community-built register of local wildlife names across India's languages."><meta name="praani-release" content="praani-20261022-catalogue-fix-v14"><title>Praani — Every creature. Every name.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari&family=Noto+Sans+Kannada&family=Noto+Sans+Tamil&family=Noto+Sans+Telugu&family=Noto+Sans+Malayalam&family=Noto+Sans+Bengali&family=Noto+Sans+Gujarati&family=Noto+Sans+Gurmukhi&family=Noto+Sans+Oriya&family=Noto+Naskh+Arabic&family=Noto+Sans+Ol+Chiki&family=Noto+Sans+Meetei+Mayek&display=swap">
 <link rel="stylesheet" href="/style.css?v=cleanv1120261022"><script id="species-json" type="application/json">__PRAANI_SPECIES_JSON__</script><script defer src="/app.js?v=cleanv1120261022"></script></head>
 <body>
