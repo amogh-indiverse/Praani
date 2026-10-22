@@ -22,7 +22,7 @@ test("catalogue parsing and Unicode decoding remain enabled", () => {
   assert.ok(source.includes("decodeEscapedUnicode"));
 });
 test("palette retains all three accent colours", () => {
-  for (const color of ["#FF714B", "#D6A4E8", "#E8C77E"]) assert.ok(source.includes(color));
+  for (const color of ["#FF704A", "#CFA4DD", "#E6C98A"]) assert.ok(source.includes(color));
 });
 test("PostgreSQL schema and contribution API remain present", () => {
   assert.ok(source.includes("CREATE TABLE IF NOT EXISTS species_catalog"));
@@ -103,7 +103,7 @@ test("cohesive editorial stylesheet and mobile layout", () => {
   assert.ok(css && css.length>6000);
   assert.ok(css.includes("@media(max-width:720px)"));
   assert.ok(!css.includes("::first-letter"));
-  for(const color of ["#FF714B","#D6A4E8","#E8C77E"])assert.ok(css.includes(color));
+  for(const color of ["#FF704A","#CFA4DD","#E6C98A"])assert.ok(css.includes(color));
 });
 
 test("corrupted snake common names are rejected, genuine names preserved",async()=>{
