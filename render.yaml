@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: praani-web
+    runtime: docker
+    plan: free
+    region: singapore
+    repo: https://github.com/amogh-indiverse/Praani
+    branch: main
+    healthCheckPath: /api/health
+    autoDeployTrigger: off
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        generateValue: true
