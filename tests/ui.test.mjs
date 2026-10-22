@@ -105,3 +105,20 @@ test("cohesive editorial stylesheet and mobile layout", () => {
   assert.ok(!css.includes("::first-letter"));
   for(const color of ["#FF714B","#D6A4E8","#E8C77E"])assert.ok(css.includes(color));
 });
+
+test("corrupted snake common names are rejected, genuine names preserved",async()=>{
+ const {runInNewContext}=await import("node:vm");
+ const start=source.indexOf("const safeSnakeName=x=>");
+ const end=source.indexOf(";\nconst getCatalog",start);
+ assert.ok(start>=0&&end>start,"snake sanitization function");
+ const fn=runInNewContext(source.slice(start+"const safeSnakeName=".length,end));
+ assert.equal(fn("King Cobra"),"King Cobra");
+ assert.equal(fn("Indian Rock Python"),"Indian Rock Python");
+ assert.equal(fn("English common name not availableG: ZügelnatterChinese: 南峰锦蛇 SynonymSpilotes hodgsonii GÜNTHER 1860: 156Compsosoma hodgsonii"),null);
+ assert.equal(fn("A very long unstructured "+ "Synonym".repeat(50)),null);
+});
+test("server templates have Unicode decoding before response",()=>{
+ assert.ok(source.includes("decodeStaticUnicode(HTML)"));
+ assert.ok(source.includes("decodeStaticUnicode(CLIENT)"));
+ assert.ok(source.includes("decodeStaticUnicode(ADMIN_HTML)"));
+});
