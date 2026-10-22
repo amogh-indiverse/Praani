@@ -6,14 +6,24 @@ services:
     region: singapore
     repo: https://github.com/amogh-indiverse/Praani
     branch: main
-    healthCheckPath: /api/health
+    dockerfilePath: ./Dockerfile
     autoDeployTrigger: off
+    healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: praani-postgres-test
+          property: connectionString
       - key: SESSION_SECRET
         generateValue: true
       - key: ADMIN_EMAIL
-        sync: false
+        value: amogh@indiverse.live
       - key: ADMIN_PASSWORD
         generateValue: true
+
+databases:
+  - name: praani-postgres-test
+    plan: free
+    region: singapore
+    postgresMajorVersion: "18"
+    ipAllowList: []
