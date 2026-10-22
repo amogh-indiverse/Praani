@@ -84,3 +84,24 @@ test("Live Render title and health diagnostic", async () => {
   console.log("LIVE_TITLE",title,"HTML_BYTES",html.length);
   assert.ok(response.ok);
 });
+
+test("server template decoder removes literal Unicode escape sequences", async () => {
+  const { runInNewContext } = await import("node:vm");
+  const start=source.indexOf("const decodeStaticUnicode=");
+  const end=source.indexOf(";\nBun.serve",start);
+  assert.ok(start>=0 && end>start);
+  const fn=runInNewContext(source.slice(start,end)+";decodeStaticUnicode");
+  assert.equal(fn(String.raw`Praani \\u2014 wildlife`),"Praani — wildlife");
+  assert.equal(fn(String.raw`Bird \\u2022 Snake`),"Bird • Snake");
+});
+test("all static pages decode Unicode before serving", () => {
+  for(const value of ["decodeStaticUnicode(HTML)","decodeStaticUnicode(CSS)","decodeStaticUnicode(CLIENT)","decodeStaticUnicode(ADMIN_HTML)"])assert.ok(source.includes(value),value);
+  assert.ok(source.includes('decodeStaticUnicode(HTML).replace("__PRAANI_SPECIES_JSON__",json)'));
+});
+test("cohesive editorial stylesheet and mobile layout", () => {
+  const css=source.split("const CSS=String.raw`")[1]?.split("`;\nconst CLIENT=")[0];
+  assert.ok(css && css.length>6000);
+  assert.ok(css.includes("@media(max-width:720px)"));
+  assert.ok(!css.includes("::first-letter"));
+  for(const color of ["#FF714B","#D6A4E8","#E8C77E"])assert.ok(css.includes(color));
+});
