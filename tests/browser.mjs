@@ -51,10 +51,11 @@ try{
  const embedded=await live.locator("#species-json").textContent();
  let species=[];try{species=JSON.parse(embedded)}catch(e){console.log("LIVE species parse failed",e.message)}
  console.log("LIVE catalogue",species.length,"sample",JSON.stringify(species.filter(s=>/tiger/i.test((s.common||"")+" "+(s.scientific||""))).slice(0,6).map(s=>({common:s.common,scientific:s.scientific}))));
+ console.log("LIVE JS STATUS",await live.evaluate(()=>({handler:typeof document.querySelector("#species-search").oninput,expanded:document.querySelector("#species-search").getAttribute("aria-expanded"),script:document.querySelector('script[src^="/app.js"]')?.src,release:document.querySelector('meta[name="praani-release"]')?.content})));
  await live.locator("#species-search").fill("tiger");
  await live.waitForTimeout(250);
  const liveSuggestions=await live.locator("#results .result strong").allTextContents();
- console.log("LIVE suggestions",JSON.stringify(liveSuggestions.slice(0,10)));
+ console.log("LIVE suggestions",JSON.stringify(liveSuggestions.slice(0,10)),"expanded",await live.locator("#species-search").getAttribute("aria-expanded"),"results",await live.locator("#results").innerText());
  console.log("LIVE errors",JSON.stringify(liveErrors));
  await live.screenshot({path:"test-results/live-mobile.png",fullPage:true});
  assert.ok(species.length>1000,"Live species JSON unexpectedly empty");
