@@ -76,6 +76,18 @@ try{
  const embedded=await live.locator("#species-json").textContent();
  let species=[];try{species=JSON.parse(embedded)}catch(e){console.log("LIVE species parse failed",e.message)}
  console.log("LIVE catalogue",species.length,"sample",JSON.stringify(species.filter(s=>/tiger/i.test((s.common||"")+" "+(s.scientific||""))).slice(0,6).map(s=>({common:s.common,scientific:s.scientific}))));
+ const badSnakeNames=species.filter(s=>s.type==="Snake"&&typeof s.common==="string"&&(s.common.length>95||/Synonym|Distribution|Higher Taxa|English common name not available/i.test(s.common)));
+ console.log("LIVE invalid snake labels",badSnakeNames.length);
+ assert.equal(badSnakeNames.length,0,"Scraped snake text leaked into visible species names");
+ const visible=await live.locator("body").innerText();
+ const title=await live.title();
+ console.log("LIVE title",title);
+ assert.ok(!title.includes(String.fromCharCode(92)+"u"),"Page title contains Unicode escapes");
+ assert.ok(!visible.includes(String.fromCharCode(92)+"u"),"Visible page text contains Unicode escapes");
+ const overflow=await live.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+ console.log("LIVE mobile overflow px",overflow);
+ assert.ok(overflow<=2,"Mobile layout overflows horizontally");
+
  console.log("LIVE JS STATUS",await live.evaluate(()=>({handler:typeof document.querySelector("#species-search").oninput,expanded:document.querySelector("#species-search").getAttribute("aria-expanded"),script:document.querySelector('script[src^="/app.js"]')?.src,release:document.querySelector('meta[name="praani-release"]')?.content})));
  await live.locator("#species-search").fill("tiger");
  await live.waitForTimeout(250);
