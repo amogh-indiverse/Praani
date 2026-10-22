@@ -122,3 +122,19 @@ test("server templates have Unicode decoding before response",()=>{
  assert.ok(source.includes("decodeStaticUnicode(CLIENT)"));
  assert.ok(source.includes("decodeStaticUnicode(ADMIN_HTML)"));
 });
+
+test("PostgreSQL JSONB aliases decode from strings or arrays", async () => {
+ const { runInNewContext } = await import("node:vm");
+ const start=source.indexOf("const parseAliases=value=>");
+ const end=source.indexOf("\nconst getCatalog=async",start);
+ assert.ok(start>=0&&end>start,"Alias parser missing");
+ const parseAliases=runInNewContext(source.slice(start,end)+";parseAliases");
+ assert.deepEqual(Array.from(parseAliases('["Royal Bengal Tiger","Panthera tigris"]')),["Royal Bengal Tiger","Panthera tigris"]);
+ assert.deepEqual(Array.from(parseAliases(["Peacock"])),["Peacock"]);
+ assert.deepEqual(Array.from(parseAliases("not JSON")) ,[]);
+ assert.deepEqual(Array.from(parseAliases(null)),[]);
+});
+test("all catalogue rows normalize aliases before serving", () => {
+ assert.ok(source.includes("const names=parseAliases(s.alternativeNames)"));
+ assert.ok(source.includes("return {...s,alternativeNames:"));
+});
