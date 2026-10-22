@@ -26,7 +26,7 @@ mkdirSync("test-results",{recursive:true});
 try{
  const page=await browser.newPage({viewport:{width:390,height:844}});
  const errors=[];page.on("pageerror",e=>errors.push(e.message));
- await page.route("**/api/**",r=>r.fulfill({status:200,contentType:"application/json",body:JSON.stringify({cards:[],hasMore:false,total:samples.length})}));
+ await page.route("**/api/**",r=>r.fulfill({status:200,contentType:"application/json",body:JSON.stringify(r.request().method()==="POST"?{ok:true}:{cards:[],hasMore:false,total:samples.length})}));
  let html=decodeStaticUnicode(extract("HTML")).replace("__PRAANI_SPECIES_JSON__",JSON.stringify(samples)).replace(/<script defer src="\/app\.js[^"]*"><\/script>/,"").replace(/<link rel="stylesheet" href="\/style\.css[^"]*">/,"");
  await page.setContent(html,{waitUntil:"domcontentloaded"});
  await page.addStyleTag({content:decodeStaticUnicode(extract("CSS"))});
@@ -48,6 +48,19 @@ try{
  const escaped=await page.locator("#results .result strong").allTextContents();
  console.log("MOCK Unicode suggestions",JSON.stringify(escaped));
  assert.ok(escaped.includes("Snow Leopard"),"Escaped Unicode not decoded");
+ await page.locator("#results .result").filter({hasText:"Snow Leopard"}).first().click();
+ await page.locator("#local-name").fill("Him Tendua");
+ await page.locator("#language").selectOption("Hindi");
+ await page.locator("#region").fill("Himalaya");
+ await page.locator("#submit").click();
+ await page.locator("#success").waitFor({state:"visible",timeout:5000});
+ assert.ok((await page.locator("#success-summary").innerText()).includes("Him Tendua"),"Success confirmation missing submitted name");
+ const previousTheme=await page.locator("html").getAttribute("data-theme");
+ await page.locator("#theme").click();
+ assert.notEqual(await page.locator("html").getAttribute("data-theme"),previousTheme,"Theme toggle failed");
+ await page.locator("#theme").click();
+ assert.equal(await page.locator("html").getAttribute("data-theme"),previousTheme,"Theme reset failed");
+ assert.ok(!((await page.locator("body").innerText()).includes(String.fromCharCode(92)+"u")),"Visible page contains escaped Unicode");
  await page.screenshot({path:"test-results/mobile.png",fullPage:true});
  await page.close();
  if(process.env.PRAANI_LIVE_TEST==="1"){
