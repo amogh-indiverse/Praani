@@ -2,10 +2,10 @@ import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import test from "node:test";
 const source = readFileSync(new URL("../index.ts", import.meta.url), "utf8");
-const buttons = [...source.matchAll(/<button\\b[^>]*>([^<]*)<\\/button>/g)].map(x=>x[1]);
+const buttons = [...source.matchAll(/<button\b[^>]*>([^<]*)<\/button>/g)].map(x=>x[1]);
 test("all static button labels are ASCII", () => {
   assert.ok(buttons.length >= 6);
-  for (const label of buttons) assert.match(label, /^[\\x00-\\x7F]*$/);
+  for (const label of buttons) assert.match(label, /^[\x00-\x7F]*$/);
 });
 test("submission and confirmation buttons are visible and plain text", () => {
   assert.ok(source.includes('id="submit" class="primary" type="submit">Add this name</button>'));
