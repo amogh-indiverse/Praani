@@ -51,3 +51,22 @@ test("native autocomplete options escape user-visible HTML", async () => {
   const escape = runInNewContext("(" + expression + ")");
   assert.equal(escape('A&B<"x">'), 'A&amp;B&lt;&quot;x&quot;&gt;');
 });
+
+test("autocomplete finds common, scientific and alternative names from first character", async () => {
+  const { runInNewContext } = await import("node:vm");
+  const start = source.indexOf("function findSpecies(q,items){");
+  const end = source.indexOf("\nfunction showResults(){", start);
+  assert.ok(start >= 0 && end > start);
+  const code = source.slice(start,end);
+  const findSpecies = runInNewContext(code + "; findSpecies", {
+    norm: x => String(x || "").normalize("NFKC").toLowerCase().trim()
+  });
+  const data = [
+    {common:"Bengal Tiger",scientific:"Panthera tigris",family:"Felidae",alternativeNames:["Royal Bengal Tiger"]},
+    {common:"Indian Peafowl",scientific:"Pavo cristatus",family:"Phasianidae",alternativeNames:["Peacock"]}
+  ];
+  assert.equal(findSpecies("b",data)[0].common,"Bengal Tiger");
+  assert.equal(findSpecies("panthera",data)[0].common,"Bengal Tiger");
+  assert.equal(findSpecies("peacock",data)[0].common,"Indian Peafowl");
+  assert.equal(findSpecies("nonesuch",data).length,0);
+});
