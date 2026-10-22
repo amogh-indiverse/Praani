@@ -31,7 +31,7 @@ test("PostgreSQL schema and contribution API remain present", () => {
 
 test("client JavaScript compiles without syntax errors", async () => {
   const { Script } = await import("node:vm");
-  const match = source.match(/const CLIENT=String\\.raw`([\\s\\S]*?)`;/);
+  const match = source.match(/const CLIENT=String\.raw`([\s\S]*?)`;/);
   assert.ok(match, "Client script must be present");
   assert.doesNotThrow(() => new Script(match[1]));
 });
@@ -44,8 +44,10 @@ test("native species autocomplete fallback is wired", () => {
 });
 test("native autocomplete options escape user-visible HTML", async () => {
   const { runInNewContext } = await import("node:vm");
-  const match = source.match(/const escapeOption=x=>([^;]+);/);
-  assert.ok(match, "Escaping function must exist");
-  const escape = runInNewContext("(" + "x=>" + match[1] + ")");
+  const start = source.indexOf("const escapeOption=x=>");
+  const end = source.indexOf(";const options=species", start);
+  assert.ok(start >= 0 && end > start, "Escaping function must exist");
+  const expression = source.slice(start + "const escapeOption=".length, end);
+  const escape = runInNewContext("(" + expression + ")");
   assert.equal(escape('A&B<"x">'), 'A&amp;B&lt;&quot;x&quot;&gt;');
 });
