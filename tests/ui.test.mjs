@@ -35,23 +35,29 @@ test("client JavaScript compiles without syntax errors", async () => {
   assert.ok(match, "Client script must be present");
   assert.doesNotThrow(() => new Script(match[1]));
 });
-test("native species autocomplete fallback is wired", () => {
-  assert.ok(source.includes('list="species-options"'));
-  assert.ok(source.includes('id="species-options">__PRAANI_OPTIONS__'));
-  assert.ok(source.includes('search.onchange=()=>'));
+test("one controlled suggestion list without competing browser datalist", () => {
+  assert.ok(!source.includes('list="species-options"'));
+  assert.ok(!source.includes('id="species-options"'));
+  assert.ok(source.includes('id="results" class="results"'));
   assert.ok(source.includes('search.oninput=showResults'));
-  assert.ok(source.includes('.replace("__PRAANI_OPTIONS__",options)'));
+  assert.ok(source.includes('scored.slice(0,10)'));
 });
-test("native autocomplete options escape user-visible HTML", async () => {
+test("autocomplete ranks relevant tiger names and excludes unrelated families", async () => {
   const { runInNewContext } = await import("node:vm");
-  const start = source.indexOf("const escapeOption=x=>");
-  const end = source.indexOf(";const options=species", start);
-  assert.ok(start >= 0 && end > start, "Escaping function must exist");
-  const expression = source.slice(start + "const escapeOption=".length, end);
-  const escape = runInNewContext("(" + expression + ")");
-  assert.equal(escape('A&B<"x">'), 'A&amp;B&lt;&quot;x&quot;&gt;');
+  const start = source.indexOf("function findSpecies(q,items){");
+  const end = source.indexOf("\nfunction showResults(){",start);
+  assert.ok(start>=0&&end>start);
+  const fn=runInNewContext(source.slice(start,end)+";findSpecies",{norm:x=>String(x||"").normalize("NFKC").toLowerCase().trim()});
+  const items=[
+    {common:"Bengal Tiger",scientific:"Panthera tigris",family:"Felidae",alternativeNames:["Royal Bengal Tiger"]},
+    {common:"Tiger Shark",scientific:"Galeocerdo cuvier",family:"Carcharhinidae",alternativeNames:[]},
+    {common:"Unrelated Bird",scientific:"Randomus birdus",family:"Tigeridae",alternativeNames:[]}
+  ];
+  const results=fn("tiger",items);
+  assert.equal(results[0].common,"Tiger Shark");
+  assert.equal(results[1].common,"Bengal Tiger");
+  assert.equal(results.length,2);
 });
-
 test("autocomplete finds common, scientific and alternative names from first character", async () => {
   const { runInNewContext } = await import("node:vm");
   const start = source.indexOf("function findSpecies(q,items){");
