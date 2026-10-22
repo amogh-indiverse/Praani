@@ -12,7 +12,7 @@ test('PostgreSQL import is atomic, preserves contributions and is applied only o
   const source=readFileSync(new URL('../index.ts',import.meta.url),'utf8');
   for(const query of [...source.matchAll(/^"(CREATE TABLE IF NOT EXISTS (?:species_catalog|local_names)\(.*)"[,]?$/gm)].map(m=>JSON.parse('"'+m[1]+'"')))await sql.unsafe(query);
   const catalogue=JSON.parse(readFileSync(new URL('../data/catalogue-reference.json',import.meta.url),'utf8'));
-  await sql.unsafe('INSERT INTO species_catalog(id,species_kind,scientific) SELECT id,type,scientific FROM jsonb_to_recordset($1::jsonb) AS x(id text,type text,scientific text)',[JSON.stringify(catalogue)]);
+  await sql.unsafe('INSERT INTO species_catalog(id,species_kind,scientific) SELECT id,type,scientific FROM jsonb_to_recordset($1::jsonb) AS x(id text,type text,scientific text)',[catalogue]);
   const dataset=JSON.parse(gunzipSync(readFileSync(new URL('../data/verified-local-names.json.gz',import.meta.url))).toString('utf8'));
   dataset.records=dataset.records.slice(0,401);dataset.record_count=401;dataset.version='test-atomic-401';
   let batches=0;
