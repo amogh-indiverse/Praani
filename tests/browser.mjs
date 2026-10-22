@@ -57,6 +57,7 @@ try{
  await page.locator("#language").selectOption("Hindi");
  await page.locator("#region").fill("Himalaya");
  await page.locator("#submit").click();
+ console.log("FORM DIAGNOSTIC",await page.locator("#form-message").innerText(),await page.locator("#species-search").inputValue(),await page.locator("#language").inputValue());
  await page.locator("#success").waitFor({state:"visible",timeout:5000});
  assert.ok((await page.locator("#success-summary").innerText()).includes("Him Tendua"),"Success confirmation missing submitted name");
  const previousTheme=await page.locator("html").getAttribute("data-theme");
