@@ -160,9 +160,9 @@ html[data-theme=light] .form-card{background:#fff;border-color:#ded6d8}
 const CLIENT=String.raw`(()=>{'use strict';
 const $=s=>document.querySelector(s);
 const LANG=['Kannada','Hindi','Tamil','Telugu','Malayalam','Marathi','Bengali','Gujarati','Punjabi','Odia','Assamese','Konkani','Tulu','Kodava','Urdu','Sanskrit','Nepali','Manipuri','Bodo','Santali','Khasi','Mizo','Sindhi','Kashmiri','Dogri','Maithili','Other'];
+const decodeEscapedUnicode=value=>typeof value==='string'?value.replace(/\\u([0-9a-fA-F]{4})/g,(_,hex)=>String.fromCharCode(parseInt(hex,16))):value;
 let catalog=[];try{catalog=JSON.parse($('#species-json').textContent).map(s=>({...s,common:decodeEscapedUnicode(s.common),scientific:decodeEscapedUnicode(s.scientific),family:decodeEscapedUnicode(s.family),group:decodeEscapedUnicode(s.group),alternativeNames:(s.alternativeNames||[]).map(decodeEscapedUnicode)}))}catch(e){console.error('Invalid species JSON',e)}
 const index=new Map(catalog.map(x=>[x.id,x]));const norm=x=>String(x||'').normalize('NFKC').toLocaleLowerCase().trim();
-const decodeEscapedUnicode=value=>typeof value==='string'?value.replace(/\\u([0-9a-fA-F]{4})/g,(_,hex)=>String.fromCharCode(parseInt(hex,16))):value;
 const el=(tag,parent,value,className)=>{const x=document.createElement(tag);if(value!==undefined)x.textContent=decodeEscapedUnicode(value);if(className)x.className=className;if(parent)parent.appendChild(x);return x};
 const local=(key,value)=>{try{if(value!==undefined)localStorage.setItem(key,value);return localStorage.getItem(key)}catch{return null}};
 const mode=local('praani-mode')==='light'?'light':'dark';document.documentElement.dataset.theme=mode;$('#theme').textContent=mode==='dark'?'☀':'☾';$('#theme').onclick=()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;$('#theme').textContent=t==='dark'?'☀':'☾';local('praani-mode',t)};
