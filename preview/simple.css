@@ -78,3 +78,30 @@ body[data-view="archive"] #theme{display:inline-block}
 }
 @media(max-width:350px){.simple-view{padding-left:15px;padding-right:15px}.simple-content h1{font-size:27px}.simple-links button{font-size:12px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Praani typographic hunt. No photos, icons, illustrations or image requests. */
+body[data-view="simple"]{background:#121217}
+.simple-view{padding-top:46px}
+.simple-shell{max-width:660px}
+.simple-type-hero{min-height:330px;background:#F4EEE6;color:#1D1B1C;border-radius:13px;padding:30px 34px;display:flex;flex-direction:column;overflow:hidden}
+.simple-type-top,.simple-type-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:10px;letter-spacing:.15em;font-weight:800;color:#6C6265}
+.simple-type-top span:last-child{font-variant-numeric:tabular-nums}
+.simple-type-kicker{color:#AE4B31;font-size:10px;letter-spacing:.15em;font-weight:800;margin:37px 0 9px}
+.simple-type-hero .simple-species{font-size:clamp(42px,6.8vw,78px);font-weight:800;line-height:1.03;letter-spacing:-.073em;margin:0;color:#1D1B1C;max-width:590px;text-wrap:balance}
+.simple-scientific{font-size:14px;color:#766B6D;font-style:italic;margin:12px 0 35px}
+.simple-type-bottom{margin-top:auto}
+.simple-type-dot{height:9px;width:9px;border-radius:50%;background:#CFA4DD;flex-shrink:0}
+.simple-content{padding-top:30px}
+.simple-content h1{font-size:clamp(26px,3.4vw,38px);line-height:1.2;margin:0 0 25px;letter-spacing:-.052em}
+.simple-actions{max-width:660px}
+.simple-disclaimer{max-width:570px}
+@media(max-width:700px){
+ .simple-view{padding:22px 18px 45px}
+ .simple-type-hero{padding:22px;min-height:310px;border-radius:11px}
+ .simple-type-kicker{margin-top:40px}
+ .simple-type-hero .simple-species{font-size:clamp(43px,11vw,62px)}
+ .simple-scientific{margin-bottom:30px}
+ .simple-content{padding-top:25px}
+ .simple-content h1{font-size:clamp(26px,7vw,33px);margin-bottom:22px}
+}
+@media(max-width:350px){.simple-type-hero{min-height:295px;padding:18px}.simple-type-hero .simple-species{font-size:42px}.simple-type-top,.simple-type-bottom{font-size:9px}}
