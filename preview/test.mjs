@@ -16,6 +16,15 @@ try{
  assert.equal(hunt.cards.length,3);assert.equal(hunt.photographs,3);
  await page.waitForFunction(()=>document.querySelector('#hunt-animal')?.textContent!=='Finding your first animal…');
  const firstAnimal=await page.locator('#hunt-animal').innerText();
+ for(let i=0;i<3;i++){
+  await page.locator('#hunt-photo').waitFor({state:'visible',timeout:15000});
+  const width=await page.locator('#hunt-photo').evaluate(img=>img.naturalWidth);
+  assert.ok(width>100,'Rights-verified species photo failed to load for card '+i);
+  assert.ok((await page.locator('#hunt-photo-credit').innerText()).includes('CC BY 4.0'));
+  console.log('LICENSED PHOTO PASS',i,await page.locator('#hunt-animal').innerText(),width);
+  await page.screenshot({path:output+'/praani-hunt-card-'+(i+1)+'.png',fullPage:false});
+  await page.locator('#hunt-next').click();
+ }
  await page.locator('#hunt-save').click();
  await page.locator('[data-view-tab="fieldbook"]').click();
  assert.equal(await page.locator('#fieldbook-view').isVisible(),true);
