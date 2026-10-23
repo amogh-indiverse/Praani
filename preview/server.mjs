@@ -4,7 +4,7 @@ import {gunzipSync} from 'node:zlib';
 import {DatabaseSync} from 'node:sqlite';
 import {randomUUID} from 'node:crypto';
 import {HTML,CSS,CLIENT} from './ui.mjs';
-const release='praani-hunt-preview-v2';
+const release='praani-simple-preview-v3';
 const rights=JSON.parse(readFileSync(new URL('./media-rights.json',import.meta.url),'utf8'));
 const mediaByScientific=new Map(rights.media.map(m=>[m.scientific,m]));
 const catalog=JSON.parse(readFileSync(new URL('./catalog.json',import.meta.url),'utf8'));
@@ -32,6 +32,8 @@ if(req.method==='GET'&&path==='/style.css')return send(res,CSS,'text/css; charse
 if(req.method==='GET'&&path==='/app.js')return send(res,CLIENT,'application/javascript; charset=utf-8');
 if(req.method==='GET'&&path==='/hunt.css')return send(res,readFileSync(new URL('./hunt.css',import.meta.url),'utf8'),'text/css; charset=utf-8');
 if(req.method==='GET'&&path==='/hunt.js')return send(res,readFileSync(new URL('./hunt.mjs',import.meta.url),'utf8'),'application/javascript; charset=utf-8');
+if(req.method==='GET'&&path==='/simple.css')return send(res,readFileSync(new URL('./simple.css',import.meta.url),'utf8'),'text/css; charset=utf-8');
+if(req.method==='GET'&&path==='/simple.js')return send(res,readFileSync(new URL('./simple.mjs',import.meta.url),'utf8'),'application/javascript; charset=utf-8');
 if(path==='/favicon.ico'){res.writeHead(204);return res.end()}
 if(req.method==='GET'&&path==='/api/health')return json(res,{ok:true,release,database:'isolated preview SQLite',species:catalog.length,sourcedNames:sourced.length,productionConnected:false});
 if(req.method==='GET'&&path==='/api/catalog-status')return json(res,{total:catalog.length});
