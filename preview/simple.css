@@ -1,0 +1,80 @@
+
+/* Praani Simple: one photo, one question, one action. */
+body[data-view="simple"]{background:#111115;color:#F6F0E9}
+body[data-view="simple"] main>.hero,
+body[data-view="simple"] main>.missions,
+body[data-view="simple"] main>.contribute,
+body[data-view="simple"] main>.archive-band,
+body[data-view="simple"] footer,
+body[data-view="simple"] .preview-banner{display:none!important}
+body[data-view="archive"] #simple-view{display:none!important}
+body[data-view="simple"] .header{height:74px;max-width:950px;border-bottom:1px solid #29262D}
+body[data-view="simple"] .logo{font-size:28px;letter-spacing:-.065em;color:#F6F0E9;font-weight:800}
+body[data-view="simple"] .header nav{display:flex;align-items:center}
+body[data-view="simple"] .header nav #theme{display:none!important}
+#view-switch{border:0;background:transparent;color:#C7BFCB;font-size:12px;font-weight:700;padding:10px 0;cursor:pointer}
+body[data-view="simple"] #view-switch:hover{color:#FF704A}
+body[data-view="archive"] #view-switch{color:var(--accent-2);font-size:12px;font-weight:750;background:transparent;border:0;padding:9px 12px}
+body[data-view="archive"] #view-switch:hover{text-decoration:underline}
+body[data-view="archive"] .header nav{display:flex;gap:12px;align-items:center}
+body[data-view="archive"] #theme{display:inline-block}
+.simple-view{min-height:calc(100vh - 74px);padding:40px 20px 70px;background:#111115;color:#F6F0E9}
+.simple-shell{max-width:630px;margin:0 auto}
+.simple-photo-wrap{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:#28252D;border-radius:13px}
+.simple-photo-wrap img{display:block;width:100%;height:100%;position:absolute;inset:0;object-fit:cover;object-position:center}
+.simple-photo-wrap img[hidden]{display:none!important}
+.simple-photo-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;color:#D6A4E8}
+.simple-photo-fallback span{font-size:30px;font-weight:800;letter-spacing:-.065em}
+.simple-photo-fallback small{font-size:11px;letter-spacing:.03em;color:#B8B0BD}
+.simple-photo-credit{position:absolute;left:0;right:0;bottom:0;margin:0;padding:18px 14px 10px;font-size:10px;line-height:1.4;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.72));text-shadow:0 1px 3px #000}
+.simple-photo-credit a{color:#fff;text-decoration:underline;text-underline-offset:2px}
+.simple-content{padding:26px 0 0}
+.simple-content h1{font-size:clamp(29px,3.3vw,40px);font-weight:750;line-height:1.18;letter-spacing:-.052em;max-width:620px;margin:0 0 11px;color:#F6F0E9}
+.simple-species{font-size:14px;color:#BFB7C2;margin:0 0 27px;line-height:1.5}
+.simple-primary{border:0;border-radius:9px;background:#FF704A;color:#17131A;font-weight:800;font-size:14px;min-height:54px;padding:14px 22px;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer}
+.simple-primary:hover{background:#FF8766}
+.simple-primary:disabled{opacity:.5;cursor:not-allowed}
+#simple-know{width:100%}
+.simple-links{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:17px}
+.simple-links button,.simple-quiet{border:0;background:transparent;color:#D6A4E8;padding:8px 0;font-size:13px;font-weight:750;cursor:pointer}
+.simple-links button:last-child{color:#C7BFCB}
+.simple-links button:hover,.simple-quiet:hover{text-decoration:underline;text-underline-offset:3px}
+.simple-disclaimer{font-size:11px;line-height:1.6;color:#A79FAE;margin:31px 0 0;max-width:600px}
+.simple-disclaimer a{color:#D6A4E8;text-decoration:underline}
+.simple-message{font-size:12px;color:#E8C77E;line-height:1.5;min-height:0;margin:12px 0 0}
+.simple-message:empty{display:none}
+.simple-ask-panel{border-top:1px solid #343039;margin-top:25px;padding-top:20px}
+.simple-ask-panel p{font-size:14px;color:#EDE6EC;margin:0 0 10px}
+.simple-ask-panel textarea{background:#24212A;color:#F6F0E9;border:1px solid #544C59;border-radius:9px;padding:12px;width:100%;min-height:92px;resize:vertical;font-size:13px}
+.simple-secondary{border:1px solid #D6A4E8;background:transparent;color:#D6A4E8;padding:10px 15px;border-radius:8px;font-weight:750;font-size:12px;cursor:pointer}
+.simple-inline{display:flex;align-items:center;gap:20px;margin-top:16px;flex-wrap:wrap}
+#simple-form{border-top:1px solid #38343D;margin-top:22px;padding-top:23px}
+.simple-form-step label{display:block;color:#F6F0E9;font-size:14px;font-weight:750;margin-bottom:10px}
+.simple-form-step input,.simple-form-step select,.simple-form-step textarea{width:100%;color:#F6F0E9;background:#24212A;border:1px solid #59505E;border-radius:9px;padding:13px 14px;font-size:15px;min-height:50px;outline:0}
+.simple-form-step input:focus,.simple-form-step select:focus,.simple-form-step textarea:focus,.simple-ask-panel textarea:focus{border-color:#D6A4E8}
+.simple-form-step input::placeholder,.simple-form-step textarea::placeholder{color:#AAA1AE}
+.simple-hint{color:#B5ACB9;font-size:11px;line-height:1.6;margin:9px 0 0}
+.simple-form-step .simple-primary{min-width:170px}
+.simple-name-review{color:#D6A4E8;font-size:20px;font-weight:750;margin:0 0 22px}
+.simple-field{margin:0 0 18px}
+.simple-field label{font-size:13px;margin-bottom:7px}
+.simple-optional{font-size:11px;color:#A79FAE;font-weight:500}
+.simple-success{padding:25px 0 5px}
+.simple-success h2{font-size:28px;letter-spacing:-.05em;color:#F6F0E9;margin:0 0 8px}
+.simple-success p{font-size:14px;color:#C6BEC8;margin:0 0 22px}
+.simple-view [hidden]{display:none!important}
+.simple-view :focus-visible{outline:2px solid #D6A4E8;outline-offset:3px}
+@media(max-width:700px){
+ body[data-view="simple"] .header{height:68px}
+ body[data-view="simple"] .header nav{width:auto}
+ body[data-view="simple"] .header .logo{font-size:27px}
+ .simple-view{padding:23px 20px 50px;min-height:calc(100vh - 68px)}
+ .simple-photo-wrap{aspect-ratio:4/3;border-radius:10px}
+ .simple-content{padding-top:23px}
+ .simple-content h1{font-size:clamp(27px,7.5vw,35px);line-height:1.18}
+ .simple-species{margin-bottom:22px}
+ .simple-primary{min-height:51px}
+ .simple-disclaimer{margin-top:26px}
+}
+@media(max-width:350px){.simple-view{padding-left:15px;padding-right:15px}.simple-content h1{font-size:27px}.simple-links button{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
