@@ -5,14 +5,15 @@
     {
       "scientific": "Ratufa indica",
       "common": "Indian Giant Squirrel",
-      "file": "Malabar Giant Squirrel (Ratufa indica).jpg",
-      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Malabar_Giant_Squirrel_(Ratufa_indica).jpg?width=900",
-      "source": "https://commons.wikimedia.org/wiki/File:Malabar_Giant_Squirrel_(Ratufa_indica).jpg",
-      "creator": "Sanjana Krishnamoorthy",
+      "file": "Ratufa indica 109203910.jpg",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Ratufa_indica_109203910.jpg?width=900",
+      "source": "https://commons.wikimedia.org/wiki/File:Ratufa_indica_109203910.jpg",
+      "creator": "Subhadra Devi",
       "license": "CC BY 4.0",
       "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
-      "changes": "Displayed with CSS object-fit crop; original file unmodified",
-      "verified": "2026-10-23"
+      "changes": "Original iNaturalist photograph, displayed with CSS object-fit crop; original file unmodified",
+      "verified": "2026-10-23",
+      "verificationNote": "CC BY 4.0 independently reviewed by iNaturalistReviewBot on Wikimedia Commons; wild animal observation 67570863"
     },
     {
       "scientific": "Anthracoceros coronatus",
