@@ -17,33 +17,24 @@ try{
  assert.equal(await page.locator('#simple-know').isVisible(),true);
  assert.equal(await page.locator('#view-switch').innerText(),'Explore archive');
  assert.equal(await page.locator('#theme').isVisible(),false);
- assert.equal(await page.locator('#simple-photo').getAttribute('alt')!==null,true);
+
+ assert.equal(await page.locator('#simple-view img').count(),0,'No images should appear on Name Hunt');
  assert.equal(await page.locator('.hunt-play').count(),0,'Old complex hunt removed');
  assert.equal(await page.locator('.fieldbook-screen').count(),0,'Fieldbook dashboard removed');
  const health=await page.request.get(base+'/api/health').then(r=>r.json());
  assert.equal(health.productionConnected,false,'Preview must not connect to production');
  assert.equal(health.species,2029);
- const rights=await page.request.get(base+'/media-rights.json').then(r=>r.json());
- assert.equal(rights.media.length,3);
- for(const m of rights.media){
-  assert.equal(m.license,'CC BY 4.0');
-  assert.ok(m.creator&&m.source.startsWith('https://commons.wikimedia.org/wiki/File:'));
-  assert.ok(m.licenseUrl.startsWith('https://creativecommons.org/licenses/by/4.0/'));
- }
  const hunt=await page.request.get(base+'/api/hunt?language=Kannada').then(r=>r.json());
  assert.equal(hunt.cards.length,3);
- assert.equal(hunt.photographs,3);
  const first=await page.locator('#simple-species').innerText();
  for(let i=0;i<3;i++){
-  await page.locator('#simple-photo').waitFor({state:'visible',timeout:20000});
-  assert.ok(await page.locator('#simple-photo').evaluate(el=>el.naturalWidth>100),'Species image missing '+i);
-  assert.ok((await page.locator('#simple-photo-credit').innerText()).includes('CC BY 4.0'));
-  assert.ok((await page.locator('#simple-photo').getAttribute('alt')).includes('photographed by'));
-  console.log('RIGHTS CLEARED IMAGE',i,await page.locator('#simple-species').innerText());
-  if(i===0)await page.screenshot({path:output+'/praani-simple-desktop.png',fullPage:true});
+  assert.ok((await page.locator('#simple-species').innerText()).length>3);
+  assert.ok((await page.locator('#simple-scientific').innerText()).length>3);
+  assert.equal(await page.locator('#simple-index').innerText(),String(i+1).padStart(2,'0')+' / 03');
   await page.locator('#simple-next').click();
  }
  assert.equal(await page.locator('#simple-species').innerText(),first);
+ await page.screenshot({path:output+'/praani-simple-desktop.png',fullPage:true});
  await page.locator('#simple-ask').click();
  assert.equal(await page.locator('#simple-ask-panel').isVisible(),true);
  assert.ok((await page.locator('#simple-ask-text').inputValue()).includes(first));
@@ -97,7 +88,7 @@ try{
  for(const width of [320,390,768]){
   await page.setViewportSize({width,height:844});
   await page.goto(base,{waitUntil:'domcontentloaded'});
-  await page.locator('#simple-photo').waitFor({state:'visible',timeout:20000});
+  await page.waitForFunction(()=>document.querySelector('#simple-species')?.textContent!=='Finding an animal…');
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
   assert.ok(overflow<=2,'Horizontal overflow at '+width+': '+overflow);
   assert.equal(await page.locator('#simple-form').isVisible(),false);
@@ -106,5 +97,5 @@ try{
   assert.equal(await page.locator('#contribute').isVisible(),true);
  }
  assert.deepEqual(errors,[]);
- console.log('PRAANI SIMPLE PASS: images, licensing, one-question homepage, progressive form, Unicode, API validation, archive, autocomplete, mobile 320/390/768, no JS errors.');
+ console.log('PRAANI IMAGE-FREE PASS: typographic homepage, no images, progressive form, Unicode, API validation, archive, autocomplete, mobile 320/390/768, no JS errors.');
 }finally{await browser.close()}
