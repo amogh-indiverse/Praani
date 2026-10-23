@@ -22,9 +22,10 @@ try{
   assert.ok(width>100,'Rights-verified species photo failed to load for card '+i);
   assert.ok((await page.locator('#hunt-photo-credit').innerText()).includes('CC BY 4.0'));
   console.log('LICENSED PHOTO PASS',i,await page.locator('#hunt-animal').innerText(),width);
-  await page.screenshot({path:output+'/praani-hunt-card-'+(i+1)+'.png',fullPage:false});
+  await page.locator('#hunt-play').screenshot({path:output+'/praani-hunt-card-'+(i+1)+'.png'});
   await page.locator('#hunt-next').click();
  }
+ await page.screenshot({path:output+'/praani-hunt-desktop.png',fullPage:true});
  await page.locator('#hunt-save').click();
  await page.locator('[data-view-tab="fieldbook"]').click();
  assert.equal(await page.locator('#fieldbook-view').isVisible(),true);
