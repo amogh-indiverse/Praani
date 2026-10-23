@@ -1,21 +1,22 @@
 export const HTML=String.raw`<!doctype html>
 <html lang="en" data-theme="dark"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101014"><meta name="description" content="Praani is a public, community-built register of local wildlife names across India's languages."><meta name="praani-release" content="praani-simple-preview-v3"><title>Praani — Keep a local name alive.</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101014"><meta name="description" content="Praani is a public, community-built register of local wildlife names across India's languages."><meta name="praani-release" content="praani-type-preview-v4"><title>Praani — Keep a local name alive.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari&family=Noto+Sans+Kannada&family=Noto+Sans+Tamil&family=Noto+Sans+Telugu&family=Noto+Sans+Malayalam&family=Noto+Sans+Bengali&family=Noto+Sans+Gujarati&family=Noto+Sans+Gurmukhi&family=Noto+Sans+Oriya&family=Noto+Naskh+Arabic&family=Noto+Sans+Ol+Chiki&family=Noto+Sans+Meetei+Mayek&display=swap">
-<link rel="stylesheet" href="/style.css?v=allnamesv1520261022"><script id="species-json" type="application/json">__PRAANI_SPECIES_JSON__</script><script defer src="/app.js?v=allnamesv1520261022"></script><link rel="stylesheet" href="/simple.css?v=simplev1"><script defer src="/simple.js?v=simplev1"></script></head>
+<link rel="stylesheet" href="/style.css?v=allnamesv1520261022"><script id="species-json" type="application/json">__PRAANI_SPECIES_JSON__</script><script defer src="/app.js?v=allnamesv1520261022"></script><link rel="stylesheet" href="/simple.css?v=typev4"><script defer src="/simple.js?v=typev4"></script></head>
 <body data-view="simple">
 <header class="header shell"><a class="logo" href="/" id="home-logo" aria-label="Praani homepage">praani.</a><nav aria-label="Main navigation"><button id="view-switch" type="button">Explore archive</button><button id="theme" aria-label="Switch appearance" type="button">Dark</button></nav></header>
 <div class="preview-banner">DESIGN PREVIEW <span>Original archive preserved · sandbox contributions are temporary</span></div>
 <main><section id="simple-view" class="simple-view" aria-label="Praani name hunt">
 <div class="simple-shell">
-  <div class="simple-photo-wrap">
-    <img id="simple-photo" alt="" hidden>
-    <div id="simple-photo-fallback" class="simple-photo-fallback"><span>praani.</span><small>Loading wildlife photograph</small></div>
-    <p id="simple-photo-credit" class="simple-photo-credit" hidden>Photo by <a id="simple-photo-author" target="_blank" rel="noopener noreferrer"></a> · <a id="simple-photo-license" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></p>
+  <div class="simple-type-hero">
+    <div class="simple-type-top"><span>THE LOCAL NAME PROJECT</span><span id="simple-index">01 / 03</span></div>
+    <p class="simple-type-kicker">A NAME WORTH PRESERVING</p>
+    <h2 id="simple-species" class="simple-species" aria-live="polite">Finding an animal…</h2>
+    <p id="simple-scientific" class="simple-scientific"></p>
+    <div class="simple-type-bottom"><span id="simple-kind">INDIA'S WILDLIFE</span><span class="simple-type-dot" aria-hidden="true"></span></div>
   </div>
   <div class="simple-content">
     <h1>What do people call this animal where you live?</h1>
-    <p id="simple-species" class="simple-species" aria-live="polite">Finding an animal…</p>
     <div id="simple-actions" class="simple-actions">
       <button id="simple-know" class="simple-primary" type="button">I know a name <span aria-hidden="true">→</span></button>
       <div class="simple-links"><button id="simple-ask" type="button">Ask someone</button><button id="simple-next" type="button">Next animal <span aria-hidden="true">→</span></button></div>
@@ -44,7 +45,7 @@ export const HTML=String.raw`<!doctype html>
     </form>
     <div id="simple-success" class="simple-success" hidden role="status" aria-live="polite"><h2>Name received.</h2><p id="simple-success-text"></p><button id="simple-success-next" type="button" class="simple-primary">Another animal <span aria-hidden="true">→</span></button></div>
     <p id="simple-message" class="simple-message" role="status" aria-live="polite"></p>
-    <p class="simple-disclaimer">We're documenting names not yet recorded in Praani. That doesn't mean they're absent from the internet. <a href="/media-rights.json" target="_blank" rel="noopener noreferrer">Photo rights</a></p>
+    <p class="simple-disclaimer">We're documenting names not yet recorded in Praani. That doesn't mean they're absent from the internet.</p>
   </div>
 </div></section>
 <section class="hero shell"><div class="hero-copy"><p class="overline"><i></i> THE WILD HAS MORE THAN ONE NAME</p><h1>Some names live<br>only <span class="hero-accent">with you.</span></h1><p>A bird your ajji named. A snake known only in your village. Help bring India's undocumented wildlife names into the record, before they disappear.</p><div class="hero-actions"><a class="primary" href="#contribute">Share a local name <span aria-hidden="true">↗</span></a><a href="#missions">Find a missing-name mission ↓</a></div><p class="hero-hint">Your language. Your script. No account needed.</p></div><aside class="field-note"><div class="note-top"><span>FIELD NOTES / 001</span><span aria-hidden="true">✳</span></div><div class="name-orbit"><span>ಹೆಸರು</span><strong>Every name<br>holds a world.</strong><span>नाम · பெயர் · పేరు</span></div><p>Not another translation.<br>A name people actually use.</p><div class="note-bottom">LISTEN LOCALLY <span>DOCUMENT TOGETHER</span></div></aside></section>
