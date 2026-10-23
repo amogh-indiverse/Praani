@@ -4,7 +4,9 @@ import {gunzipSync} from 'node:zlib';
 import {DatabaseSync} from 'node:sqlite';
 import {randomUUID} from 'node:crypto';
 import {HTML,CSS,CLIENT} from './ui.mjs';
-const release='praani-ember-preview-v1';
+const release='praani-hunt-preview-v2';
+const rights=JSON.parse(readFileSync(new URL('./media-rights.json',import.meta.url),'utf8'));
+const mediaByScientific=new Map(rights.media.map(m=>[m.scientific,m]));
 const catalog=JSON.parse(readFileSync(new URL('./catalog.json',import.meta.url),'utf8'));
 // Complete possessive-only snake labels using their existing catalogue group.
 for(const s of catalog)if(s.type==='Snake'&&/[’']s$/.test(s.common||'')&&s.group)s.common+=' '+s.group;
@@ -31,6 +33,18 @@ if(req.method==='GET'&&path==='/app.js')return send(res,CLIENT,'application/java
 if(path==='/favicon.ico'){res.writeHead(204);return res.end()}
 if(req.method==='GET'&&path==='/api/health')return json(res,{ok:true,release,database:'isolated preview SQLite',species:catalog.length,sourcedNames:sourced.length,productionConnected:false});
 if(req.method==='GET'&&path==='/api/catalog-status')return json(res,{total:catalog.length});
+if(req.method==='GET'&&path==='/media-rights.json')return json(res,rights);
+if(req.method==='GET'&&path==='/api/hunt'){
+ const language=url.searchParams.get('language')||'Kannada';
+ if(!langs.includes(language))throw Object.assign(Error('Choose a supported language'),{status:400});
+ const all=allNames();
+ const featured=['Ratufa indica','Anthracoceros coronatus','Manis crassicaudata'];
+ const cards=featured.map(scientific=>catalog.find(s=>s.scientific===scientific)).filter(Boolean).map(s=>{
+  const known=all.filter(n=>n.species_id===s.id&&n.language===language);
+  return {...s,hasLanguageName:known.length>0,knownCount:known.length,media:mediaByScientific.get(s.scientific)||null};
+ });
+ return json(res,{language,scope:'Praani sourced records and preview reports only',cards,photographs:cards.filter(c=>c.media).length});
+}
 if(req.method==='GET'&&path==='/api/missions'){const language=url.searchParams.get('language')||'Kannada';if(!langs.includes(language))throw Error('Choose a supported language');const known=new Set(allNames().filter(n=>n.language===language).map(n=>n.species_id));const preferred=['Ratufa indica','Anthracoceros coronatus','Manis crassicaudata','Daboia russelii','Prionailurus viverrinus','Pangolin','Naja naja'];const remaining=catalog.filter(s=>!known.has(s.id)&&s.common);remaining.sort((a,b)=>{const rank=s=>{const n=preferred.indexOf(s.scientific);return n<0?100:n};return rank(a)-rank(b)||(a.common||a.scientific).localeCompare(b.common||b.scientific)});const missions=[];for(const type of ['Mammal','Bird','Snake']){const s=remaining.find(s=>s.type===type);if(s)missions.push(s)}return json(res,{language,scope:'Praani sourced dataset and preview reports only',missions})}
 if(req.method==='GET'&&path==='/api/entries'){const language=url.searchParams.get('language')||'',filter=url.searchParams.get('filter')||'All';if(language&&!langs.includes(language))throw Error('Invalid language');if(!['All','Birds','Mammals','Snakes','Suggested names'].includes(filter))throw Error('Invalid filter');const page=Math.max(0,Math.min(1000,Math.floor(Number(url.searchParams.get('page'))||0)));const kind={Birds:'Bird',Mammals:'Mammal',Snakes:'Snake'}[filter];const names=filter==='Suggested names'?[]:allNames().filter(n=>(!language||n.language===language)&&(!kind||index.get(n.species_id)?.type===kind));const ids=[...new Set(names.map(n=>n.species_id))];const picked=ids.slice(page*20,page*20+20);return json(res,{cards:picked.map(speciesId=>({speciesId,localNames:names.filter(n=>n.species_id===speciesId),suggestions:[]})),hasMore:ids.length>(page+1)*20})}
 if(req.method==='POST'&&path==='/api/contribute'){const origin=req.headers.origin;const allowedOrigin=process.env.PUBLIC_ORIGIN||`http://${req.headers.host}`;if(origin&&origin!==allowedOrigin)throw Object.assign(Error('Origin blocked'),{status:403});if(req.headers['sec-fetch-site']&&!['same-origin','none'].includes(req.headers['sec-fetch-site']))throw Object.assign(Error('Cross-site request blocked'),{status:403});const b=await body(req);if(!b||typeof b!=='object'||Array.isArray(b))throw Error('Invalid submission');const species=index.get(clean(b.speciesId,48));if(!species||species.type!==b.type)throw Error('Choose a species from the catalogue');const name=clean(b.localName,100),language=clean(b.language,40),region=clean(b.region,90),learnedFrom=clean(b.learnedFrom,100),context=clean(b.context,480);if(name.length<2)throw Error('Add a local name with at least two characters');if(!langs.includes(language))throw Error('Choose a language');if(!sources.includes(learnedFrom))throw Error('Tell us how you learned this name');if(sourced.some(n=>n.species_id===species.id&&norm(n.name)===norm(name)&&n.language===language&&norm(n.region||'')===norm(region)))throw Object.assign(Error('Exact duplicate already recorded'),{status:409});throttle(req);try{db.prepare('INSERT INTO names VALUES(?,?,?,?,?,?,?,?,?,?)').run(randomUUID(),species.id,name,norm(name),language,region,norm(region),learnedFrom,context,Date.now())}catch(e){if(String(e).includes('UNIQUE'))throw Object.assign(Error('Exact duplicate already recorded'),{status:409});throw e}return json(res,{ok:true,preview:true},201)}
