@@ -59,6 +59,8 @@ try{
  await page.locator("#local-name").fill("Him Tendua");
  await page.locator("#language").selectOption("Hindi");
  await page.locator("#region").fill("Himalaya");
+ await page.locator("#learned-from").selectOption("Used in my family or community");
+ assert.equal(await page.locator("#local-name").getAttribute("required"),"","Local name should be required when provided");
  await page.locator("#submit").click();
  console.log("FORM DIAGNOSTIC",await page.locator("#form-message").innerText(),await page.locator("#species-search").inputValue(),await page.locator("#language").inputValue());
  await page.locator("#success").waitFor({state:"visible",timeout:5000});
@@ -72,6 +74,8 @@ try{
   await page.locator("#suggest").fill("Forest guardian");
   await page.locator("#why").fill("Inspired by its forest habitat");
   assert.equal(await page.locator("#local-name").inputValue(),"");
+  assert.equal(await page.locator("#local-name").getAttribute("required"),null,"Proposal-only should not require local name");
+  assert.equal(await page.locator("#learned-from").getAttribute("required"),null,"Proposal-only should not require a name source");
   await page.locator("#submit").click();
   await page.locator("#success").waitFor({state:"visible",timeout:5000});
   const saved=contributions.at(-1);
