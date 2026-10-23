@@ -1,53 +1,62 @@
 export const HTML=String.raw`<!doctype html>
 <html lang="en" data-theme="dark"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101014"><meta name="description" content="Praani is a public, community-built register of local wildlife names across India's languages."><meta name="praani-release" content="praani-type-preview-v4"><title>Praani — Keep a local name alive.</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101014"><meta name="description" content="Praani is a public, community-built register of local wildlife names across India's languages."><meta name="praani-release" content="praani-bright-card-v5"><title>Praani — Keep a local name alive.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari&family=Noto+Sans+Kannada&family=Noto+Sans+Tamil&family=Noto+Sans+Telugu&family=Noto+Sans+Malayalam&family=Noto+Sans+Bengali&family=Noto+Sans+Gujarati&family=Noto+Sans+Gurmukhi&family=Noto+Sans+Oriya&family=Noto+Naskh+Arabic&family=Noto+Sans+Ol+Chiki&family=Noto+Sans+Meetei+Mayek&display=swap">
-<link rel="stylesheet" href="/style.css?v=allnamesv1520261022"><script id="species-json" type="application/json">__PRAANI_SPECIES_JSON__</script><script defer src="/app.js?v=allnamesv1520261022"></script><link rel="stylesheet" href="/simple.css?v=typev4"><script defer src="/simple.js?v=typev4"></script></head>
+<link rel="stylesheet" href="/style.css?v=allnamesv1520261022"><script id="species-json" type="application/json">__PRAANI_SPECIES_JSON__</script><script defer src="/app.js?v=allnamesv1520261022"></script><link rel="stylesheet" href="/simple.css?v=brightv5"><script defer src="/simple.js?v=brightv5"></script></head>
 <body data-view="simple">
 <header class="header shell"><a class="logo" href="/" id="home-logo" aria-label="Praani homepage">praani.</a><nav aria-label="Main navigation"><button id="view-switch" type="button">Explore archive</button><button id="theme" aria-label="Switch appearance" type="button">Dark</button></nav></header>
 <div class="preview-banner">DESIGN PREVIEW <span>Original archive preserved · sandbox contributions are temporary</span></div>
-<main><section id="simple-view" class="simple-view" aria-label="Praani name hunt">
-<div class="simple-shell">
-  <div class="simple-type-hero">
-    <div class="simple-type-top"><span>THE LOCAL NAME PROJECT</span><span id="simple-index">01 / 03</span></div>
-    <p class="simple-type-kicker">A NAME WORTH PRESERVING</p>
-    <h2 id="simple-species" class="simple-species" aria-live="polite">Finding an animal…</h2>
-    <p id="simple-scientific" class="simple-scientific"></p>
-    <div class="simple-type-bottom"><span id="simple-kind">INDIA'S WILDLIFE</span><span class="simple-type-dot" aria-hidden="true"></span></div>
-  </div>
-  <div class="simple-content">
-    <h1>What do people call this animal where you live?</h1>
-    <div id="simple-actions" class="simple-actions">
-      <button id="simple-know" class="simple-primary" type="button">I know a name <span aria-hidden="true">→</span></button>
-      <div class="simple-links"><button id="simple-ask" type="button">Ask someone</button><button id="simple-next" type="button">Next animal <span aria-hidden="true">→</span></button></div>
+<main><section id="simple-view" class="simple-view" aria-label="Praani homepage">
+  <div class="simple-shell">
+    <div class="aotd-card" aria-label="Animal of the Day">
+      <div class="aotd-top"><span class="aotd-label"><span class="aotd-spark" aria-hidden="true">✳</span> ANIMAL OF THE DAY</span><span class="aotd-edition">LEARN A NAME, EVERY DAY</span></div>
+      <div class="aotd-grid">
+        <div class="aotd-animal">
+          <p class="aotd-category">INDIA'S WILDLIFE</p>
+          <h1 id="aotd-species">Tiger</h1>
+          <p id="aotd-scientific" class="aotd-scientific">Panthera tigris</p>
+        </div>
+        <div class="aotd-name">
+          <span class="aotd-language" id="aotd-language">IN KANNADA</span>
+          <strong id="aotd-native" lang="kn">ಹುಲಿ</strong>
+          <span id="aotd-roman" class="aotd-roman">Huli</span>
+        </div>
+      </div>
+      <div class="aotd-bottom"><span>ONE ANIMAL. MANY NAMES.</span><button id="aotd-add" type="button">Know another name? <span aria-hidden="true">↗</span></button></div>
     </div>
-    <section id="simple-ask-panel" class="simple-ask-panel" hidden aria-label="Ask someone about this animal">
-      <p>Ask someone who knows this animal locally.</p>
-      <textarea id="simple-ask-text" readonly aria-label="Question to share"></textarea>
-      <div class="simple-inline"><button id="simple-copy" class="simple-secondary" type="button">Copy question</button><button id="simple-ask-close" class="simple-quiet" type="button">Close</button></div>
+    <section class="quick-add" id="quick-add" aria-label="Add a local wildlife name">
+      <div class="quick-heading"><div><p class="quick-eyebrow">HELP BUILD THE LIVING ARCHIVE</p><h2>Know a name we're missing?</h2><p>Find any bird, mammal or snake. Add the name your family or community uses.</p></div></div>
+      <form id="simple-form" autocomplete="off">
+        <div class="quick-field quick-search-wrap">
+          <label for="simple-search">Find an animal</label>
+          <div class="quick-search"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><input id="simple-search" type="search" placeholder="Search tiger, hornbill, pangolin…" aria-controls="simple-results" aria-expanded="false" aria-autocomplete="list" required><span class="quick-search-end" id="search-end">↵</span></div>
+          <div id="simple-results" class="quick-results" role="listbox" hidden></div>
+          <p id="simple-selected" class="quick-selected" hidden></p>
+        </div>
+        <div class="quick-field">
+          <label for="simple-name">What's its local name?</label>
+          <input id="simple-name" type="text" maxlength="100" minlength="2" placeholder="Enter the name in your language" required>
+          <p class="quick-hint">Use the original script if you know it. We welcome regional variations.</p>
+        </div>
+        <div id="simple-extra" class="quick-extra" hidden>
+          <div class="quick-two">
+            <div class="quick-field"><label for="simple-language">Language</label><select id="simple-language" required><option value="">Choose language</option></select></div>
+            <div class="quick-field"><label for="simple-region">Where is it used? <span class="optional">Optional</span></label><input id="simple-region" maxlength="90" placeholder="Village, district or region"></div>
+          </div>
+          <div class="quick-field"><label for="simple-source">How do you know this name?</label><select id="simple-source" required><option value="">Choose a source</option><option>Used in my family or community</option><option>Heard from a local speaker</option><option>Used by local wildlife observers</option><option>Found in a book or online source</option><option>Other first-hand knowledge</option></select></div>
+          <div class="quick-field"><label for="simple-context">More context <span class="optional">Optional</span></label><textarea id="simple-context" maxlength="480" rows="2" placeholder="Who uses it, how it is pronounced, or where you heard it"></textarea></div>
+        </div>
+        <button id="simple-submit" class="quick-submit" type="submit">Check & add this name <span aria-hidden="true">→</span></button>
+        <p class="quick-hint quick-review">We check for existing records. New contributions are reviewed before verification.</p>
+        <p id="simple-message" class="quick-message" role="status" aria-live="polite"></p>
+      </form>
+      <div id="simple-success" class="quick-success" hidden role="status" aria-live="polite"><span class="quick-success-mark">✓</span><h3>Thank you for preserving a name.</h3><p id="simple-success-text"></p><button id="simple-success-next" class="quick-submit" type="button">Add another name <span aria-hidden="true">→</span></button></div>
     </section>
-    <form id="simple-form" hidden>
-      <div id="simple-step-one" class="simple-form-step">
-        <label for="simple-name">What is the name?</label>
-        <input id="simple-name" required minlength="2" maxlength="100" placeholder="In the language you know" autocomplete="off">
-        <p class="simple-hint">Use the word people actually say, in its original script if possible.</p>
-        <div class="simple-inline"><button id="simple-continue" type="button" class="simple-primary">Continue <span aria-hidden="true">→</span></button><button id="simple-cancel" type="button" class="simple-quiet">Cancel</button></div>
-      </div>
-      <div id="simple-step-two" class="simple-form-step" hidden>
-        <p id="simple-name-review" class="simple-name-review"></p>
-        <div class="simple-field"><label for="simple-language">Which language?</label><select id="simple-language" required><option value="">Choose language</option></select></div>
-        <div class="simple-field"><label for="simple-region">Where is this name used? <span class="simple-optional">Optional</span></label><input id="simple-region" maxlength="90" placeholder="Village, region or state"></div>
-        <div class="simple-field"><label for="simple-source">How do you know this name?</label><select id="simple-source" required><option value="">Choose a source</option><option>Used in my family or community</option><option>Heard from a local speaker</option><option>Used by local wildlife observers</option><option>Found in a book or online source</option><option>Other first-hand knowledge</option></select></div>
-        <div class="simple-field"><label for="simple-context">Anything else? <span class="simple-optional">Optional</span></label><textarea id="simple-context" maxlength="480" rows="2" placeholder="Who uses it, a story, or a source. No private details."></textarea></div>
-        <p class="simple-hint">Your contribution is a community report, not a verified scientific record. This preview may reset.</p>
-        <div class="simple-inline"><button id="simple-submit" type="submit" class="simple-primary">Submit name <span aria-hidden="true">→</span></button><button id="simple-back" type="button" class="simple-quiet">Back</button></div>
-      </div>
-    </form>
-    <div id="simple-success" class="simple-success" hidden role="status" aria-live="polite"><h2>Name received.</h2><p id="simple-success-text"></p><button id="simple-success-next" type="button" class="simple-primary">Another animal <span aria-hidden="true">→</span></button></div>
-    <p id="simple-message" class="simple-message" role="status" aria-live="polite"></p>
-    <p class="simple-disclaimer">We're documenting names not yet recorded in Praani. That doesn't mean they're absent from the internet.</p>
+    <div class="quick-footer"><div><strong>Every name holds a world.</strong><p>Help preserve the words that don't always make it into books or databases.</p></div><button id="quick-ask" type="button">Ask someone you know <span aria-hidden="true">↗</span></button></div>
+    <div id="quick-ask-panel" class="quick-ask-panel" hidden><p>Share this question with someone who knows local wildlife.</p><textarea id="quick-ask-text" readonly></textarea><button id="quick-copy" type="button">Copy question</button></div>
+    <p class="quick-disclaimer">Praani checks its recorded names; absence here does not prove a name is absent from every database. This is an isolated design preview.</p>
   </div>
-</div></section>
+</section>
 <section class="hero shell"><div class="hero-copy"><p class="overline"><i></i> THE WILD HAS MORE THAN ONE NAME</p><h1>Some names live<br>only <span class="hero-accent">with you.</span></h1><p>A bird your ajji named. A snake known only in your village. Help bring India's undocumented wildlife names into the record, before they disappear.</p><div class="hero-actions"><a class="primary" href="#contribute">Share a local name <span aria-hidden="true">↗</span></a><a href="#missions">Find a missing-name mission ↓</a></div><p class="hero-hint">Your language. Your script. No account needed.</p></div><aside class="field-note"><div class="note-top"><span>FIELD NOTES / 001</span><span aria-hidden="true">✳</span></div><div class="name-orbit"><span>ಹೆಸರು</span><strong>Every name<br>holds a world.</strong><span>नाम · பெயர் · పేరు</span></div><p>Not another translation.<br>A name people actually use.</p><div class="note-bottom">LISTEN LOCALLY <span>DOCUMENT TOGETHER</span></div></aside></section>
 <section id="missions" class="missions shell"><div class="mission-heading"><div><p class="eyebrow">01 / THE MISSING NAMES</p><h2>A small mission.<br>A lasting record.</h2></div><div class="mission-control"><label for="mission-language">I know names in</label><select id="mission-language"><option>Kannada</option><option>Hindi</option><option>Tamil</option><option>Telugu</option><option>Malayalam</option><option>Marathi</option><option>Tulu</option><option>Kodava</option><option>Santali</option><option>Other</option></select></div></div><p class="mission-explainer">These species have no name in the selected language in Praani's sourced dataset. A gap here is a starting point, not proof that a name is absent everywhere online.</p><div id="mission-cards" class="mission-cards" aria-live="polite"></div><p id="mission-status" class="feed-status" role="status"></p><div class="mission-tip"><b>Try this in your next conversation.</b> Ask someone who knows the local wildlife: “What do you call this animal here?” Record the place, language and how you learnt the name. Please don't invent a translation to fill a gap.</div></section>
 <section class="contribute shell" id="contribute" aria-label="Contribute a name">
