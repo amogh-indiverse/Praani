@@ -89,7 +89,7 @@ function renderFieldbook(){
   const label=document.createElement('span');label.className='hunt-eyebrow';label.textContent=item.status==='ask'?'ASK SOMEONE':'SAVED FOR LATER';card.appendChild(label);
   const title=document.createElement('h3');title.textContent=item.common;card.appendChild(title);
   const details=document.createElement('p');details.textContent=item.scientific+' · '+item.language+(item.region?' · '+item.region:'');card.appendChild(details);
-  const revisit=document.createElement('button');revisit.type='button';revisit.textContent='Continue this hunt →';revisit.onclick=async()=>{if($('#hunt-language').querySelector('option[value="'+item.language+'"]'))$('#hunt-language').value=item.language;else $('#hunt-language').value='Other';await loadCards();const index=state.cards.findIndex(c=>c.id===item.id);if(index>=0)state.index=index;renderCard();setView('hunt');$('#hunt-play').scrollIntoView({behavior:'smooth'})};card.appendChild(revisit);
+  const revisit=document.createElement('button');revisit.type='button';revisit.textContent='Continue this hunt →';revisit.onclick=async()=>{if([...$('#hunt-language').options].some(o=>o.value===item.language))$('#hunt-language').value=item.language;else $('#hunt-language').value='Other';await loadCards();const index=state.cards.findIndex(c=>c.id===item.id);if(index>=0)state.index=index;renderCard();setView('hunt');$('#hunt-play').scrollIntoView({behavior:'smooth'})};card.appendChild(revisit);
   const remove=document.createElement('button');remove.type='button';remove.textContent='Remove';remove.onclick=()=>{writeSaved(readSaved().filter(x=>!(x.id===item.id&&x.language===item.language)));renderFieldbook()};card.appendChild(remove);
   root.appendChild(card);
  }
