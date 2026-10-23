@@ -6,6 +6,8 @@ import {randomUUID} from 'node:crypto';
 import {HTML,CSS,CLIENT} from './ui.mjs';
 const release='praani-ember-preview-v1';
 const catalog=JSON.parse(readFileSync(new URL('./catalog.json',import.meta.url),'utf8'));
+// Complete possessive-only snake labels using their existing catalogue group.
+for(const s of catalog)if(s.type==='Snake'&&/[’']s$/.test(s.common||'')&&s.group)s.common+=' '+s.group;
 const index=new Map(catalog.map(s=>[s.id,s]));
 const dataset=JSON.parse(gunzipSync(readFileSync(new URL('../data/verified-local-names.json.gz',import.meta.url))));
 // This standalone sandbox never reads DATABASE_URL or connects to PostgreSQL.
