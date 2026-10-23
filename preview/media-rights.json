@@ -1,0 +1,42 @@
+{
+  "scope": "Praani interactive preview only",
+  "policy": "Only images with checked Commons file-level licence and attribution; no unverified search results or noncommercial media",
+  "media": [
+    {
+      "scientific": "Ratufa indica",
+      "common": "Indian Giant Squirrel",
+      "file": "Malabar Giant Squirrel (Ratufa indica).jpg",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Malabar_Giant_Squirrel_(Ratufa_indica).jpg?width=900",
+      "source": "https://commons.wikimedia.org/wiki/File:Malabar_Giant_Squirrel_(Ratufa_indica).jpg",
+      "creator": "Sanjana Krishnamoorthy",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "Displayed with CSS object-fit crop; original file unmodified",
+      "verified": "2026-10-23"
+    },
+    {
+      "scientific": "Anthracoceros coronatus",
+      "common": "Malabar Pied-Hornbill",
+      "file": "Malabar Pied hornbill.jpg",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Malabar_Pied_hornbill.jpg?width=900",
+      "source": "https://commons.wikimedia.org/wiki/File:Malabar_Pied_hornbill.jpg",
+      "creator": "27Abhay",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "Displayed with CSS object-fit crop; original file unmodified",
+      "verified": "2026-10-23"
+    },
+    {
+      "scientific": "Manis crassicaudata",
+      "common": "Thick-tailed Pangolin",
+      "file": "Indian pangolin (Manis crassicaudata) - oo 246940 (cropped to A).jpg",
+      "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Indian_pangolin_(Manis_crassicaudata)_-_oo_246940_(cropped_to_A).jpg?width=900",
+      "source": "https://commons.wikimedia.org/wiki/File:Indian_pangolin_(Manis_crassicaudata)_-_oo_246940_(cropped_to_A).jpg",
+      "creator": "D’Cruze N, Singh B, Mookerjee A, Harrington LA and Macdonald DW (2018); crop by Daniel Mietchen",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "Source photograph was cropped by Daniel Mietchen; displayed with CSS object-fit crop",
+      "verified": "2026-10-23"
+    }
+  ]
+}
