@@ -4,7 +4,7 @@ import {gunzipSync} from 'node:zlib';
 import {DatabaseSync} from 'node:sqlite';
 import {randomUUID} from 'node:crypto';
 import {HTML,CSS,CLIENT} from './ui.mjs';
-const release='praani-simple-preview-v3';
+const release='praani-type-preview-v4';
 const rights=JSON.parse(readFileSync(new URL('./media-rights.json',import.meta.url),'utf8'));
 const mediaByScientific=new Map(rights.media.map(m=>[m.scientific,m]));
 const catalog=JSON.parse(readFileSync(new URL('./catalog.json',import.meta.url),'utf8'));
