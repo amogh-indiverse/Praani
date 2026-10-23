@@ -4,6 +4,9 @@ on:
     branches: [preview/electric-ember]
   pull_request:
     paths: ['preview/**']
+concurrency:
+  group: praani-preview-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   browser:
     runs-on: ubuntu-latest
