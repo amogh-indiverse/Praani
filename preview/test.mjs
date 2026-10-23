@@ -16,6 +16,8 @@ try{
  assert.equal(hunt.cards.length,3);assert.equal(hunt.photographs,3);
  await page.waitForFunction(()=>document.querySelector('#hunt-animal')?.textContent!=='Finding your first animal…');
  const firstAnimal=await page.locator('#hunt-animal').innerText();
+ const nextBg=await page.locator('#hunt-next').evaluate(el=>getComputedStyle(el).backgroundColor);
+ assert.equal(nextBg,'rgba(0, 0, 0, 0)','Next-animal control must not have browser-default grey fill');
  for(let i=0;i<3;i++){
   await page.locator('#hunt-photo').waitFor({state:'visible',timeout:15000});
   const width=await page.locator('#hunt-photo').evaluate(img=>img.naturalWidth);
