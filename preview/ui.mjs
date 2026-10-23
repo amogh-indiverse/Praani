@@ -2,32 +2,51 @@ export const HTML=String.raw`<!doctype html>
 <html lang="en" data-theme="dark"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101014"><meta name="description" content="Praani is a public, community-built register of local wildlife names across India's languages."><meta name="praani-release" content="praani-hunt-preview-v2"><title>Praani — Keep a local name alive.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari&family=Noto+Sans+Kannada&family=Noto+Sans+Tamil&family=Noto+Sans+Telugu&family=Noto+Sans+Malayalam&family=Noto+Sans+Bengali&family=Noto+Sans+Gujarati&family=Noto+Sans+Gurmukhi&family=Noto+Sans+Oriya&family=Noto+Naskh+Arabic&family=Noto+Sans+Ol+Chiki&family=Noto+Sans+Meetei+Mayek&display=swap">
-<link rel="stylesheet" href="/style.css?v=allnamesv1520261022"><script id="species-json" type="application/json">__PRAANI_SPECIES_JSON__</script><script defer src="/app.js?v=allnamesv1520261022"></script><link rel="stylesheet" href="/hunt.css?v=huntv2"><script defer src="/hunt.js?v=huntv2"></script></head>
-<body data-view="hunt">
-<header class="header shell"><a class="logo" href="/">praani<span>.</span></a><nav aria-label="Main navigation"><button class="view-tab" data-view-tab="hunt" aria-current="page" type="button">Name Hunt</button><button class="view-tab" data-view-tab="archive" type="button">Original Archive</button><button class="view-tab" data-view-tab="fieldbook" type="button">My Fieldbook <span id="fieldbook-count"></span></button><button id="theme" aria-label="Switch appearance" type="button">Dark</button></nav></header>
-<div class="preview-banner">INTERACTIVE DESIGN PREVIEW <span>Original archive preserved · sandbox contributions may reset</span></div>
-<main><section id="hunt-view" class="shell" aria-label="Praani Name Hunt">
-<div class="hunt-intro"><div class="hunt-intro-copy">
-<p class="hunt-kicker">THE GREAT INDIAN NAME HUNT</p>
-<h1>Every animal has a name.<br><em>Some are still missing.</em></h1>
-<p>Some names live in villages, families and memories, but have not yet made it into our archive. Help document the words people actually use for India's wildlife.</p>
-<div class="hunt-intro-actions"><a class="hunt-primary" href="#hunt-play">Start a name hunt <span aria-hidden="true">→</span></a><button class="hunt-secondary" data-open-archive type="button">Use the original archive</button></div>
-</div><aside class="hunt-fieldnote" aria-label="Names in Indian scripts"><div class="hunt-fieldnote-top"><span>FIELD NOTE / 001</span><span>✳</span></div><div class="hunt-fieldnote-glyphs"><span>ಹೆಸರು</span><span>नाम</span><span>பெயர்</span></div><div class="hunt-fieldnote-bottom"><span>ASK LOCALLY</span><span>DOCUMENT TOGETHER</span></div></aside></div>
-<section class="hunt-play" id="hunt-play" aria-label="Interactive wildlife name hunt">
-<div class="hunt-play-head"><div><p class="hunt-eyebrow">01 / FIND A MISSING NAME</p><h2>What do people call it where you come from?</h2></div>
-<div class="hunt-prefs"><div class="hunt-pref"><label for="hunt-language">I know names in</label><select id="hunt-language"><option>Kannada</option><option>Hindi</option><option>Tamil</option><option>Telugu</option><option>Malayalam</option><option>Marathi</option><option>Bengali</option><option>Tulu</option><option>Kodava</option><option>Konkani</option><option>Odia</option><option>Assamese</option><option>Santali</option><option>Other</option></select></div>
-<div class="hunt-pref"><label for="hunt-region">My region (optional)</label><select id="hunt-region"><option value="">Choose region</option><option>Karnataka</option><option>Kerala</option><option>Tamil Nadu</option><option>Maharashtra</option><option>Assam</option><option>Odisha</option><option>West Bengal</option><option>Gujarat</option><option>Other</option></select></div></div></div>
-<div class="hunt-board"><div class="hunt-photo" id="hunt-photo-wrap"><img id="hunt-photo" alt="" hidden><div class="hunt-photo-fallback" id="hunt-photo-fallback"><span>?</span><small>FIELD PHOTOGRAPH LOADING</small></div><div class="hunt-photo-credit" id="hunt-photo-credit" hidden>Photo: <a id="hunt-source-link" target="_blank" rel="noopener noreferrer"></a> · <a id="hunt-license-link" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></div></div>
-<div class="hunt-panel"><div class="hunt-step"><span id="hunt-progress">01 / 03</span><div class="hunt-bars" aria-hidden="true"><span class="active"></span><span></span><span></span></div></div>
-<div class="hunt-gap" id="hunt-gap">Checking Praani records…</div><h3 id="hunt-animal">Finding your first animal…</h3><p class="hunt-scientific" id="hunt-scientific"></p><p class="hunt-question" id="hunt-question">You do not need to be a scientist. You just need to know what people call it.</p>
-<div class="hunt-actions"><button id="hunt-know" type="button">I know a name <span aria-hidden="true">→</span></button><button id="hunt-ask" type="button">Ask someone</button><button id="hunt-save" type="button">Save for later</button></div>
-<button id="hunt-next" type="button">Skip / Next animal →</button><p class="hunt-message" id="hunt-message" role="status" aria-live="polite"></p>
-<div id="hunt-share" class="hunt-share" hidden><p>Here's a question you can send to someone who knows local wildlife. Nothing is sent automatically.</p><textarea id="hunt-share-text" readonly aria-label="Shareable wildlife name question"></textarea><button id="hunt-copy" type="button">Copy question</button></div>
-</div></div><p class="hunt-truth">“Missing” means no name recorded for this species and language in Praani's current records. It does not mean the name is absent from the internet. Contributions remain community reports until reviewed.</p></section>
-<div class="hunt-lower"><article class="hunt-lower-card"><span class="mini-label">02 / THE ORIGINAL PRAANI</span><h3>The full wildlife archive, unchanged.</h3><p>Search all species, explore existing local names and contribute through the familiar form.</p><button type="button" data-open-archive>Open original archive →</button></article><article class="hunt-lower-card"><span class="mini-label">03 / MY FIELDBOOK</span><h3>Bring a name back later.</h3><p>Save animals to ask your family, neighbours or local wildlife experts. No login required in this preview.</p><button type="button" data-open-fieldbook>View saved discoveries →</button></article></div>
-<div class="hunt-credits">Wildlife photographs appear only when their species and Commons file licence have been checked. Each photograph links to its author and licence. <a href="/media-rights.json" target="_blank" rel="noopener noreferrer">View complete image rights register</a>.</div>
-</section>
-<section id="fieldbook-view" class="shell fieldbook-screen" aria-label="My Fieldbook"><p class="hunt-kicker">YOUR PRIVATE FIELD NOTES</p><h1>My Fieldbook<span style="color:var(--accent)">.</span></h1><p>Keep track of animals you want to ask someone about. Saved locally in this browser only. This is not a user account, and these notes are not published to Praani.</p><div id="fieldbook-items" class="fieldbook-items"></div><p id="fieldbook-empty">No discoveries saved yet. Start a name hunt to add one.</p><button class="hunt-primary" data-open-hunt type="button">Back to Name Hunt →</button></section>
+<link rel="stylesheet" href="/style.css?v=allnamesv1520261022"><script id="species-json" type="application/json">__PRAANI_SPECIES_JSON__</script><script defer src="/app.js?v=allnamesv1520261022"></script><link rel="stylesheet" href="/simple.css?v=simplev1"><script defer src="/simple.js?v=simplev1"></script></head>
+<body data-view="simple">
+<header class="header shell"><a class="logo" href="/" id="home-logo" aria-label="Praani homepage">praani.</a><nav aria-label="Main navigation"><button id="view-switch" type="button">Explore archive</button><button id="theme" aria-label="Switch appearance" type="button">Dark</button></nav></header>
+<div class="preview-banner">DESIGN PREVIEW <span>Original archive preserved · sandbox contributions are temporary</span></div>
+<main><section id="simple-view" class="simple-view" aria-label="Praani name hunt">
+<div class="simple-shell">
+  <div class="simple-photo-wrap">
+    <img id="simple-photo" alt="" hidden>
+    <div id="simple-photo-fallback" class="simple-photo-fallback"><span>praani.</span><small>Loading wildlife photograph</small></div>
+    <p id="simple-photo-credit" class="simple-photo-credit" hidden>Photo by <a id="simple-photo-author" target="_blank" rel="noopener noreferrer"></a> · <a id="simple-photo-license" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></p>
+  </div>
+  <div class="simple-content">
+    <h1>What do people call this animal where you live?</h1>
+    <p id="simple-species" class="simple-species" aria-live="polite">Finding an animal…</p>
+    <div id="simple-actions" class="simple-actions">
+      <button id="simple-know" class="simple-primary" type="button">I know a name <span aria-hidden="true">→</span></button>
+      <div class="simple-links"><button id="simple-ask" type="button">Ask someone</button><button id="simple-next" type="button">Next animal <span aria-hidden="true">→</span></button></div>
+    </div>
+    <section id="simple-ask-panel" class="simple-ask-panel" hidden aria-label="Ask someone about this animal">
+      <p>Ask someone who knows this animal locally.</p>
+      <textarea id="simple-ask-text" readonly aria-label="Question to share"></textarea>
+      <div class="simple-inline"><button id="simple-copy" class="simple-secondary" type="button">Copy question</button><button id="simple-ask-close" class="simple-quiet" type="button">Close</button></div>
+    </section>
+    <form id="simple-form" hidden>
+      <div id="simple-step-one" class="simple-form-step">
+        <label for="simple-name">What is the name?</label>
+        <input id="simple-name" required minlength="2" maxlength="100" placeholder="In the language you know" autocomplete="off">
+        <p class="simple-hint">Use the word people actually say, in its original script if possible.</p>
+        <div class="simple-inline"><button id="simple-continue" type="button" class="simple-primary">Continue <span aria-hidden="true">→</span></button><button id="simple-cancel" type="button" class="simple-quiet">Cancel</button></div>
+      </div>
+      <div id="simple-step-two" class="simple-form-step" hidden>
+        <p id="simple-name-review" class="simple-name-review"></p>
+        <div class="simple-field"><label for="simple-language">Which language?</label><select id="simple-language" required><option value="">Choose language</option></select></div>
+        <div class="simple-field"><label for="simple-region">Where is this name used? <span class="simple-optional">Optional</span></label><input id="simple-region" maxlength="90" placeholder="Village, region or state"></div>
+        <div class="simple-field"><label for="simple-source">How do you know this name?</label><select id="simple-source" required><option value="">Choose a source</option><option>Used in my family or community</option><option>Heard from a local speaker</option><option>Used by local wildlife observers</option><option>Found in a book or online source</option><option>Other first-hand knowledge</option></select></div>
+        <div class="simple-field"><label for="simple-context">Anything else? <span class="simple-optional">Optional</span></label><textarea id="simple-context" maxlength="480" rows="2" placeholder="Who uses it, a story, or a source. No private details."></textarea></div>
+        <p class="simple-hint">Your contribution is a community report, not a verified scientific record. This preview may reset.</p>
+        <div class="simple-inline"><button id="simple-submit" type="submit" class="simple-primary">Submit name <span aria-hidden="true">→</span></button><button id="simple-back" type="button" class="simple-quiet">Back</button></div>
+      </div>
+    </form>
+    <div id="simple-success" class="simple-success" hidden role="status" aria-live="polite"><h2>Name received.</h2><p id="simple-success-text"></p><button id="simple-success-next" type="button" class="simple-primary">Another animal <span aria-hidden="true">→</span></button></div>
+    <p id="simple-message" class="simple-message" role="status" aria-live="polite"></p>
+    <p class="simple-disclaimer">We're documenting names not yet recorded in Praani. That doesn't mean they're absent from the internet. <a href="/media-rights.json" target="_blank" rel="noopener noreferrer">Photo rights</a></p>
+  </div>
+</div></section>
 <section class="hero shell"><div class="hero-copy"><p class="overline"><i></i> THE WILD HAS MORE THAN ONE NAME</p><h1>Some names live<br>only <span class="hero-accent">with you.</span></h1><p>A bird your ajji named. A snake known only in your village. Help bring India's undocumented wildlife names into the record, before they disappear.</p><div class="hero-actions"><a class="primary" href="#contribute">Share a local name <span aria-hidden="true">↗</span></a><a href="#missions">Find a missing-name mission ↓</a></div><p class="hero-hint">Your language. Your script. No account needed.</p></div><aside class="field-note"><div class="note-top"><span>FIELD NOTES / 001</span><span aria-hidden="true">✳</span></div><div class="name-orbit"><span>ಹೆಸರು</span><strong>Every name<br>holds a world.</strong><span>नाम · பெயர் · పేరు</span></div><p>Not another translation.<br>A name people actually use.</p><div class="note-bottom">LISTEN LOCALLY <span>DOCUMENT TOGETHER</span></div></aside></section>
 <section id="missions" class="missions shell"><div class="mission-heading"><div><p class="eyebrow">01 / THE MISSING NAMES</p><h2>A small mission.<br>A lasting record.</h2></div><div class="mission-control"><label for="mission-language">I know names in</label><select id="mission-language"><option>Kannada</option><option>Hindi</option><option>Tamil</option><option>Telugu</option><option>Malayalam</option><option>Marathi</option><option>Tulu</option><option>Kodava</option><option>Santali</option><option>Other</option></select></div></div><p class="mission-explainer">These species have no name in the selected language in Praani's sourced dataset. A gap here is a starting point, not proof that a name is absent everywhere online.</p><div id="mission-cards" class="mission-cards" aria-live="polite"></div><p id="mission-status" class="feed-status" role="status"></p><div class="mission-tip"><b>Try this in your next conversation.</b> Ask someone who knows the local wildlife: “What do you call this animal here?” Record the place, language and how you learnt the name. Please don't invent a translation to fill a gap.</div></section>
 <section class="contribute shell" id="contribute" aria-label="Contribute a name">
