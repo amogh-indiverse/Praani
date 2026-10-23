@@ -5,7 +5,7 @@ const state={cards:[],index:0,busy:false};
 const species=()=>state.cards[state.index]||null;
 const show=(selector,value)=>{const el=$(selector);if(el)el.hidden=!value};
 const text=(selector,value)=>{const el=$(selector);if(el)el.textContent=value};
-const photo=$('#simple-photo'),fallback=$('#simple-photo-fallback'),credit=$('#simple-photo-credit');
+
 const languages=['Kannada','Hindi','Tamil','Telugu','Malayalam','Marathi','Bengali','Gujarati','Punjabi','Odia','Assamese','Konkani','Tulu','Kodava','Urdu','Sanskrit','Nepali','Manipuri','Bodo','Santali','Khasi','Mizo','Sindhi','Kashmiri','Dogri','Maithili','Ladakhi','Marwari','Rajasthani','Tibetan','Other'];
 const select=$('#simple-language');
 for(const lang of languages){const option=document.createElement('option');option.value=lang;option.textContent=lang;select.appendChild(option)}
@@ -34,19 +34,9 @@ function render(){
  reset();
  if(!c)return;
  text('#simple-species',c.common||c.scientific);
- photo.hidden=true;photo.removeAttribute('src');credit.hidden=true;fallback.hidden=false;
- fallback.querySelector('small').textContent='Loading wildlife photograph';
- if(!c.media||!c.media.source||!c.media.creator||!c.media.licenseUrl||c.media.license!=='CC BY 4.0'){
-  fallback.querySelector('small').textContent='No rights-cleared photograph available';
-  return;
- }
- const author=$('#simple-photo-author'),license=$('#simple-photo-license');
- author.textContent=c.media.creator;author.href=c.media.source;
- license.textContent=c.media.license;license.href=c.media.licenseUrl;
- photo.alt=(c.common||c.scientific)+' ('+c.scientific+'), photographed by '+c.media.creator;
- photo.onload=()=>{if(species()?.id!==c.id)return;photo.hidden=false;fallback.hidden=true;credit.hidden=false};
- photo.onerror=()=>{if(species()?.id!==c.id)return;photo.hidden=true;fallback.hidden=false;credit.hidden=true;fallback.querySelector('small').textContent='Photograph unavailable'};
- photo.src=c.media.image;
+ text('#simple-scientific',c.scientific);
+ text('#simple-kind',(c.type||'WILDLIFE').toUpperCase());
+ text('#simple-index',String(state.index+1).padStart(2,'0')+' / '+String(state.cards.length).padStart(2,'0'));
 }
 async function load(){
  $('#simple-know').disabled=true;
