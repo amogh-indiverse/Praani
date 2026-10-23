@@ -15,3 +15,6 @@ body[data-view="archive"] #hunt-view,body[data-view="archive"] #fieldbook-view,b
 @media(max-width:600px){.header{height:auto;padding:15px 0;display:flex;flex-wrap:wrap;gap:12px}.header nav{width:100%;justify-content:space-between;gap:4px}.header nav .view-tab{font-size:10px;padding:8px 7px}.header nav #theme{margin:0;padding:7px 9px}.hunt-intro h1{font-size:clamp(43px,11vw,62px)}.hunt-intro-copy>p{font-size:14px}.hunt-play{padding:13px;border-radius:15px}.hunt-play-head{padding:9px}.hunt-board{border-radius:11px}.hunt-photo{height:265px;min-height:265px}.hunt-panel{padding:23px;min-height:370px}.hunt-lower,.fieldbook-items{grid-template-columns:1fr}.hunt-lower{padding-bottom:35px}.hunt-pref{flex:1}.hunt-pref select{max-width:100%}.hunt-fieldnote{display:none}}
 @media(max-width:350px){.header nav .view-tab{font-size:9px;padding:7px 5px}.hunt-panel{padding:18px}.hunt-intro h1{font-size:42px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Keep the first playable animal visible sooner on narrow screens. */
+@media(max-width:600px){.hunt-intro{padding:30px 0 22px}.hunt-intro h1{font-size:clamp(37px,9.5vw,50px);margin:13px 0 14px}.hunt-intro-copy>p{font-size:13px;line-height:1.55}.hunt-intro-actions{margin-top:17px}.hunt-intro-actions .hunt-secondary{display:none}.hunt-play-head h2{font-size:24px}}
