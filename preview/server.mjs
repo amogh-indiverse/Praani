@@ -30,6 +30,8 @@ createServer(async(req,res)=>{try{const url=new URL(req.url,'http://preview.loca
 if(req.method==='GET'&&(path==='/'||path==='/index.html')){const json=JSON.stringify(catalog).replace(/</g,'\\u003c');return send(res,HTML.replace('__PRAANI_SPECIES_JSON__',json),'text/html; charset=utf-8')}
 if(req.method==='GET'&&path==='/style.css')return send(res,CSS,'text/css; charset=utf-8');
 if(req.method==='GET'&&path==='/app.js')return send(res,CLIENT,'application/javascript; charset=utf-8');
+if(req.method==='GET'&&path==='/hunt.css')return send(res,readFileSync(new URL('./hunt.css',import.meta.url),'utf8'),'text/css; charset=utf-8');
+if(req.method==='GET'&&path==='/hunt.js')return send(res,readFileSync(new URL('./hunt.mjs',import.meta.url),'utf8'),'application/javascript; charset=utf-8');
 if(path==='/favicon.ico'){res.writeHead(204);return res.end()}
 if(req.method==='GET'&&path==='/api/health')return json(res,{ok:true,release,database:'isolated preview SQLite',species:catalog.length,sourcedNames:sourced.length,productionConnected:false});
 if(req.method==='GET'&&path==='/api/catalog-status')return json(res,{total:catalog.length});
