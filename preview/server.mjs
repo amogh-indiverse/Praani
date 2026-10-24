@@ -1,4 +1,4 @@
-import {dailyAnimal,knownNameResult} from './daily.mjs';
+import {dailyAnimal,knownNameResult,renderDailyShell} from './daily.mjs';
 import {createServer} from 'node:http';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
@@ -27,7 +27,7 @@ async function body(req){if(!req.headers['content-type']?.includes('application/
 const limits=new Map();
 function throttle(req){const ip=String(req.headers['x-forwarded-for']||req.socket.remoteAddress).split(',')[0];const cutoff=Date.now()-600000;const recent=(limits.get(ip)||[]).filter(t=>t>cutoff);if(recent.length>=20)throw Object.assign(Error('Too many submissions. Please try again later.'),{status:429});recent.push(Date.now());limits.set(ip,recent);if(limits.size>5000)for(const [key,values]of limits)if(values.at(-1)<cutoff)limits.delete(key)}
 createServer(async(req,res)=>{try{const url=new URL(req.url,'http://preview.local');const path=url.pathname;
-if(req.method==='GET'&&(path==='/'||path==='/index.html')){const json=JSON.stringify(catalog).replace(/</g,'\\u003c');return send(res,HTML.replace('__PRAANI_SPECIES_JSON__',json),'text/html; charset=utf-8')}
+if(req.method==='GET'&&(path==='/'||path==='/index.html')){const json=JSON.stringify(catalog).replace(/</g,'\\u003c');return send(res,renderDailyShell(HTML.replace('__PRAANI_SPECIES_JSON__',json),catalog),'text/html; charset=utf-8')}
 if(req.method==='GET'&&path==='/style.css')return send(res,CSS,'text/css; charset=utf-8');
 if(req.method==='GET'&&path==='/app.js')return send(res,CLIENT,'application/javascript; charset=utf-8');
 if(path==='/favicon.ico'){res.writeHead(204);return res.end()}
