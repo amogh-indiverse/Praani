@@ -1,0 +1,50 @@
+name: Animal of the Day checks
+on:
+  push:
+    branches: [preview/animal-of-the-day]
+jobs:
+  daily-flow:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: ci-test-only
+          POSTGRES_DB: praani_ember_ci
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgres://postgres:ci-test-only@localhost:5432/praani_ember_ci
+      PUBLIC_ORIGIN: http://localhost:3000
+      SESSION_SECRET: ci-only-not-a-deployment-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.1'
+      - run: npm install --no-save playwright
+      - run: npx playwright install --with-deps chrome
+      - run: node --test preview/daily.test.mjs
+      - run: node preview/seed-test.mjs
+      - name: Check persistent app
+        run: |
+          bun run index.ts &
+          for i in $(seq 1 30); do curl -fsS http://localhost:3000/api/health && break; sleep 1; done
+          PRAANI_TEST_OUTPUT=test-results/postgres node preview/daily-browser.mjs
+      - name: Check isolated preview
+        run: |
+          PORT=3002 PUBLIC_ORIGIN=http://localhost:3002 PREVIEW_DB_PATH=/tmp/daily-ci.sqlite node preview/server.mjs &
+          for i in $(seq 1 30); do curl -fsS http://localhost:3002/api/health && break; sleep 1; done
+          PRAANI_TEST_URL=http://localhost:3002 PRAANI_TEST_OUTPUT=test-results/sandbox node preview/daily-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: daily-ui-screenshots
+          path: test-results/

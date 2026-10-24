@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {Script} from 'node:vm';
+import {indiaDay,dailyAnimal,knownNameResult,nameKey} from './daily.mjs';
+const catalog=JSON.parse(readFileSync(new URL('./catalog.json',import.meta.url)));
+test('animal changes at midnight India time, consistently for everyone',()=>{assert.equal(indiaDay(new Date('2026-10-23T18:29:59Z')),'2026-10-23');assert.equal(indiaDay(new Date('2026-10-23T18:30:00Z')),'2026-10-24');const first=dailyAnimal(catalog,new Date('2026-10-23T18:30:00Z'));assert.equal(first.species.scientific,'Ratufa indica');assert.equal(dailyAnimal(catalog,new Date('2026-10-24T18:29:59Z')).species.id,first.species.id);assert.notEqual(dailyAnimal(catalog,new Date('2026-10-24T18:30:00Z')).species.id,first.species.id)});
+test('known names reject repeats even if the region changes',()=>{const rows=[{species_id:'tiger',name:'ಹುಲಿ',language:'Kannada',region:'Kodagu'}];assert.equal(knownNameResult(rows,'tiger','Kannada','  ಹುಲಿ  ').exists,true);assert.equal(knownNameResult(rows,'tiger','Hindi','ಹುಲಿ').exists,false);assert.equal(knownNameResult(rows,'tiger','Kannada','ಹೊಸ ಹೆಸರು').exists,false);assert.equal(nameKey('Forest  Name'),'forest name')});
+test('daily photograph always refers to a real catalogue species and has licence attribution',()=>{for(let i=0;i<3;i++){const d=dailyAnimal(catalog,new Date(Date.UTC(2026,9,24+i)));assert.ok(d.species.id);assert.match(d.species.source,/commons.wikimedia.org/);assert.match(d.species.image,/upload.wikimedia.org/);assert.ok(d.species.credit&&d.species.licenceUrl)}});
+test('rebuilt browser script compiles',()=>{const source=readFileSync(new URL('../index.ts',import.meta.url),'utf8');const code=source.match(/const CLIENT=String\.raw`([\s\S]*?)`;/)[1];assert.doesNotThrow(()=>new Script(code))});

@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {mkdirSync} from 'node:fs';
+import {chromium} from 'playwright';
+const base=process.env.PRAANI_TEST_URL||'http://localhost:3000';
+const output=process.env.PRAANI_TEST_OUTPUT||'test-results/daily';mkdirSync(output,{recursive:true});
+const browser=await chromium.launch({headless:true,channel:'chrome'});
+try{
+const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto(base,{waitUntil:'networkidle'});await page.waitForFunction(()=>!document.querySelector('#daily-contribute').disabled);
+assert.equal(await page.locator('.daily-card').count(),1);assert.ok(await page.locator('#daily-name').textContent());assert.ok(await page.locator('#daily-image').evaluate(img=>img.complete&&img.naturalWidth>0),'real animal photograph loads');
+assert.ok(await page.evaluate(()=>document.querySelector('.daily').getBoundingClientRect().top<document.querySelector('#contribute').getBoundingClientRect().top&&document.querySelector('#contribute').getBoundingClientRect().top<document.querySelector('#missions').getBoundingClientRect().top));
+await page.screenshot({path:output+'/desktop.png',fullPage:false});
+const dailyName=await page.locator('#daily-name').textContent();await page.locator('#daily-language').selectOption('Tulu');await page.locator('#daily-contribute').click();assert.equal(await page.locator('#species-search').inputValue(),dailyName);assert.equal(await page.locator('#language').inputValue(),'Tulu');
+await page.locator('#species-search').fill('tiger');await page.locator('#results .result').first().waitFor();await page.locator('#species-search').press('ArrowDown');await page.locator('#species-search').press('Enter');assert.equal(await page.locator('#selected').isVisible(),true);
+await page.locator('#species-search').fill('Panthera tigris');await page.locator('#results .result').first().click();await page.locator('#language').selectOption('Kannada');await page.waitForFunction(()=>document.querySelector('#known-names').textContent.includes('Huli'));
+await page.locator('#local-name').fill('Huli');await page.locator('#learned-from').selectOption('Used in my family or community');await page.locator('#region').fill('Different region');await page.locator('#submit').click();await page.waitForFunction(()=>document.querySelector('#form-message').textContent.includes('already recorded'));assert.equal(await page.locator('#personal-count').innerText(),'0');
+const unicode='ಪರೀಕ್ಷೆ '+Date.now();await page.locator('#local-name').fill(unicode);await page.locator('#context').fill('CI test only <script>alert(1)</script>');await page.locator('#submit').click();await page.locator('#success').waitFor({state:'visible'});assert.ok((await page.locator('#success-summary').textContent()).includes(unicode));assert.equal(await page.locator('#personal-count').innerText(),'1');assert.ok((await page.locator('#save-reward').textContent()).includes('Name Keeper'));assert.equal(await page.locator('#cards script').count(),0);
+const tiger=await page.evaluate(()=>JSON.parse(document.querySelector('#species-json').textContent).find(s=>s.scientific==='Panthera tigris'));
+const entry={speciesId:tiger.id,type:tiger.type,localName:unicode,language:'Kannada',region:'Another region',learnedFrom:'Used in my family or community'};
+assert.equal((await page.request.post(base+'/api/contribute',{data:entry,headers:{origin:base}})).status(),409,'region changes cannot bypass duplicate detection');
+assert.equal((await page.request.post(base+'/api/contribute',{data:{...entry,localName:'bad origin'},headers:{origin:'https://example.org'}})).status(),403);
+await page.locator('#success-another').click();await page.locator('#species-search').fill('Panthera tigris');await page.locator('#results .result').first().click();await page.locator('#name-suggestion summary').click();const proposal='CI common name '+Date.now();await page.locator('#suggest').fill(proposal);await page.locator('#why').fill('CI sandbox proposal, not a real naming recommendation.');await page.locator('#submit').click();await page.locator('#success').waitFor({state:'visible'});assert.equal(await page.locator('#personal-count').innerText(),'1','proposals do not inflate local-name rewards');
+await page.reload({waitUntil:'networkidle'});assert.equal(await page.locator('#personal-count').innerText(),'1');assert.ok((await page.locator('#cards').innerText()).includes(unicode));
+for(const width of [320,390,768,1440]){await page.setViewportSize({width,height:900});await page.goto(base+'/?width='+width,{waitUntil:'networkidle'});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'no overflow at '+width);assert.equal(await page.locator('#daily-contribute').isVisible(),true);if(width===390)await page.screenshot({path:output+'/mobile.png',fullPage:false})}
+assert.deepEqual(errors,[]);console.log('PASS: one bright daily card, real photograph, form placement, daily shortcut, autocomplete keyboard/scientific search, known-name display and duplicate blocking across regions, Unicode save, honest rewards, common-name proposal, reload persistence, safe rendering, origin rejection, responsive layouts.');
+}finally{await browser.close()}

@@ -3,6 +3,7 @@ WORKDIR /app
 COPY package.json ./
 RUN bun install --production
 COPY index.ts ./
+COPY preview/daily.mjs ./preview/daily.mjs
 COPY scripts ./scripts
 COPY data/verified-local-names.json.gz ./data/verified-local-names.json.gz
 ENV PORT=10000
