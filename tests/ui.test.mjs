@@ -10,7 +10,7 @@ test("all static button labels are ASCII", () => {
 test("submission and confirmation buttons are visible and plain text", () => {
   assert.ok(source.includes('id="submit" class="primary" type="submit">Add this name</button>'));
   assert.ok(source.includes('id="success-another">Add another name</button>'));
-  assert.ok(source.includes('<div id="details" class="details">'));
+  assert.ok(source.includes('<div id="details" class="details" hidden>'));
 });
 test("dynamic labels do not insert Unicode glyphs", () => {
   assert.ok(source.includes("button.textContent='Add this name'"));
